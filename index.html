@@ -6,29 +6,37 @@
     <title>空间</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&family=Noto+Sans+SC&family=Noto+Sans+TC&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
+        /* ============================================
+           Variables
+           ============================================ */
         :root {
-            --red:#D4342F;--red-dark:#B22F2A;--red-light:#FFF0EF;--red-accent:#E85D57;
-            --orange:#E8780A;--orange-dark:#C56508;--orange-light:#FFF5EC;--orange-accent:#F0963B;
-            --green:#4CAF82;--green-dark:#3D8B6E;--green-light:#E8F5EE;--green-pale:#F0FAF5;--green-mint:#A8D5BA;
-            --text:#1A1A2E;--text2:#5A5A72;--text3:#8E8EA0;
-            --white:#FFF;--warm:#FAFAF8;--light:#F5F4F1;
-            --sh-s:0 1px 3px rgba(0,0,0,.06);--sh-m:0 4px 16px rgba(0,0,0,.08);--sh-l:0 8px 32px rgba(0,0,0,.10);
-            --r-s:8px;--r-m:14px;--r-l:20px;
-            --serif:'Noto Serif SC','Noto Serif','Noto Sans TC',serif;
-            --sans:'Noto Sans SC','Noto Sans TC','Microsoft YaHei',sans-serif;
-            --ease:.3s cubic-bezier(.4,0,.2,1);
+            --red: #D4342F; --red-dark: #B22F2A; --red-light: #FFF0EF; --red-accent: #E85D57;
+            --orange: #E8780A; --orange-dark: #C56508; --orange-light: #FFF5EC; --orange-accent: #F0963B;
+            --green: #4CAF82; --green-dark: #3D8B6E; --green-light: #E8F5EE; --green-pale: #F0FAF5; --green-mint: #A8D5BA;
+            --text: #1A1A2E; --text2: #5A5A72; --text3: #8E8EA0;
+            --white: #FFF; --warm: #FAFAF8; --light: #F5F4F1;
+            --sh-s: 0 1px 3px rgba(0,0,0,.06);
+            --sh-m: 0 4px 16px rgba(0,0,0,.08);
+            --sh-l: 0 8px 32px rgba(0,0,0,.10);
+            --r-s: 8px; --r-m: 14px; --r-l: 20px;
+            --serif: 'Noto Serif SC','Noto Serif','Noto Sans TC',serif;
+            --sans: 'Noto Sans SC','Noto Sans TC','Microsoft YaHei',sans-serif;
+            --ease: .3s cubic-bezier(.4,0,.2,1);
         }
         *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth;font-size:16px}
         body{font-family:var(--sans);color:var(--text);background:var(--white);line-height:1.7;-webkit-font-smoothing:antialiased}
 
+        /* ============================================
+           Navbar
+           ============================================ */
         .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.06);transition:var(--ease)}
         .navbar.scrolled{box-shadow:var(--sh-s)}
         .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}
         .nav-left{display:flex;align-items:center;gap:24px}
-        .logo{font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--red);text-decoration:none;letter-spacing:1px;display:flex;align-items:center;gap:8px;cursor:pointer}
+        .logo{font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--red);text-decoration:none;letter-spacing:1px;display:flex;align-items:center;gap:8px}
         .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--red),var(--red-accent));border-radius:var(--r-s);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
         .lang-sw{display:flex;gap:2px;background:var(--light);border-radius:100px;padding:3px}
         .lang-btn{padding:5px 12px;border:none;background:0 0;color:var(--text3);font-size:.78rem;font-weight:500;border-radius:100px;cursor:pointer;transition:var(--ease);font-family:var(--sans);white-space:nowrap}
@@ -38,6 +46,9 @@
         .nav-links a:hover{color:var(--red);background:var(--red-light)}
         .nav-links a.on{color:var(--red);background:var(--red-light);font-weight:600}
 
+        /* ============================================
+           Hero
+           ============================================ */
         .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:var(--white)}
         .hero-canvas{position:absolute;top:0;left:0;width:100%;height:100%;opacity:.35;pointer-events:none}
         .hero-content{text-align:center;position:relative;z-index:1;padding:40px 20px}
@@ -52,18 +63,20 @@
         .scroll-hint .arrow{width:24px;height:24px;border-right:2px solid var(--text3);border-bottom:2px solid var(--text3);transform:rotate(45deg)}
         @keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 
+        /* ============================================
+           Sections (common)
+           ============================================ */
         .section{padding:100px 24px;position:relative}
         .section-inner{max-width:1100px;margin:0 auto}
         .section-title{font-family:var(--serif);font-size:clamp(2rem,4vw,2.8rem);font-weight:700;margin-bottom:16px;line-height:1.3}
         .section-desc{color:var(--text2);font-size:1.05rem;max-width:600px;margin-bottom:48px;font-weight:300}
-        .title-with-icon{display:flex;align-items:center;gap:12px}
-        .title-icon{font-size:1.8rem;line-height:1}
         .divider{width:48px;height:3px;border-radius:3px;margin-bottom:20px}
+        /* section accent colors */
         .section-red .divider{background:var(--red)}.section-red .section-title{color:var(--red)}
         .section-green .divider{background:linear-gradient(90deg,var(--green),var(--green-mint))}.section-green .section-title{color:#2D5A42}.section-green .section-desc{color:#5A7D6A}
         .section-orange .divider{background:linear-gradient(90deg,var(--orange),var(--orange-accent))}.section-orange .section-title{color:#8B4A06}.section-orange .section-desc{color:#7A5C3E}
 
-        .about-grid{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:start}
+        /* About section */
         .about-card{background:var(--white);border-radius:var(--r-l);padding:28px;text-align:center;box-shadow:var(--sh-m);border:1px solid rgba(0,0,0,.04);position:sticky;top:88px}
         .avatar{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);display:flex;align-items:center;justify-content:center;font-size:4rem;border:4px solid var(--white);box-shadow:0 0 0 3px var(--red),var(--sh-m);overflow:hidden}
         .avatar img{width:100%;height:100%;object-fit:cover}
@@ -81,6 +94,7 @@
         .skill-tag:hover{background:var(--red-light);color:var(--red)}
 
         #wen{background:var(--warm)}
+        /* Articles section */
         .article-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
         .article-card{background:var(--white);border-radius:var(--r-m);padding:28px;border:1px solid rgba(0,0,0,.04);transition:var(--ease);cursor:pointer;display:block}
         .article-card:hover{transform:translateY(-4px);box-shadow:var(--sh-l);border-color:rgba(212,52,47,.15)}
@@ -90,6 +104,7 @@
         .article-card .card-excerpt{color:var(--text2);font-size:.9rem;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
         .article-card .card-footer{margin-top:16px;padding-top:16px;border-top:1px solid var(--light);display:flex;align-items:center;justify-content:space-between;font-size:.82rem;color:var(--text3)}
 
+        /* Yin section */
         #yin{background:linear-gradient(180deg,#FFF 0%,var(--green-pale) 30%,#E8F5EE 100%);position:relative;overflow:hidden}
         #yin::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(76,175,130,.08),transparent 70%);border-radius:50%;pointer-events:none}
         #yin::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(168,213,186,.15),transparent 70%);border-radius:50%;pointer-events:none}
@@ -105,11 +120,11 @@
         .yin-quote blockquote{font-family:var(--serif);font-size:1.15rem;color:#3D6B52;font-style:italic;line-height:1.8;margin-bottom:12px}
         .yin-quote cite{color:var(--green-dark);font-size:.85rem;font-style:normal;font-weight:500}
 
+        /* Projects section */
         .project-list{display:flex;flex-direction:column;gap:20px}
         .project-item{display:flex;align-items:center;gap:24px;padding:24px 28px;background:var(--white);border-radius:var(--r-m);border:1px solid rgba(0,0,0,.04);transition:var(--ease);text-decoration:none;color:inherit}
         .project-item:hover{box-shadow:var(--sh-m);border-color:rgba(212,52,47,.12);transform:translateX(4px)}
         .project-icon{width:48px;height:48px;border-radius:var(--r-s);background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
-        .project-icon img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-s)}
         .project-info{flex:1;min-width:0}
         .project-info h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin-bottom:4px}
         .project-info p{color:var(--text2);font-size:.88rem;line-height:1.6}
@@ -118,6 +133,7 @@
         .project-arrow{color:var(--text3);font-size:1.2rem;flex-shrink:0;transition:var(--ease)}
         .project-item:hover .project-arrow{color:var(--red);transform:translateX(4px)}
 
+        /* Xing (Travel) section */
         #xing{background:linear-gradient(180deg,#FFF 0%,var(--orange-light) 30%,#FFE8D0 100%);position:relative;overflow:hidden}
         #xing::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(232,120,10,.08),transparent 70%);border-radius:50%;pointer-events:none}
         #xing::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(240,150,59,.12),transparent 70%);border-radius:50%;pointer-events:none}
@@ -131,9 +147,11 @@
         .xing-item:hover .xing-caption{opacity:1}
         .xing-item .xing-place{position:absolute;top:12px;left:12px;padding:4px 10px;background:rgba(232,120,10,.85);color:#fff;border-radius:100px;font-size:.75rem;font-weight:500}
 
+        /* Footer */
         .footer{padding:40px 24px;text-align:center;border-top:1px solid rgba(0,0,0,.06);color:var(--text3);font-size:.85rem}
         .footer .dot{color:var(--red)}
 
+        /* Modals */
         .modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
         .modal-overlay.show{display:flex}
         .modal{background:var(--white);border-radius:var(--r-l);max-width:720px;width:100%;max-height:85vh;overflow-y:auto;position:relative;animation:modalIn .3s ease}
@@ -145,14 +163,17 @@
         .modal-header .meta{color:var(--text3);font-size:.85rem;display:flex;gap:16px;flex-wrap:wrap}
         .modal-body{padding:24px 32px 32px;font-size:1rem;line-height:2;color:var(--text2);white-space:pre-wrap}
 
+        /* Lightbox */
         .lightbox-img{max-width:90vw;max-height:85vh;border-radius:var(--r-m);box-shadow:0 20px 60px rgba(0,0,0,.4)}
         .lightbox-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:1.4rem;cursor:pointer;transition:var(--ease);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
         .lightbox-close:hover{background:rgba(255,255,255,.3)}
         .lightbox-caption{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#fff;font-size:.95rem;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,.5);max-width:80vw}
 
+        /* Empty state */
         .empty{color:var(--text3);text-align:center;padding:48px 24px;font-size:.95rem;grid-column:1/-1}
         .empty .empty-icon{font-size:2.5rem;margin-bottom:12px;opacity:.5}
 
+        /* Responsive */
         @media(max-width:768px){
             .nav-inner{flex-wrap:wrap;gap:8px;padding:8px 16px;height:auto}
             .nav-left{flex-wrap:wrap;gap:8px}
@@ -173,6 +194,7 @@
         }
         @media(max-width:480px){.yin-grid{grid-template-columns:1fr}}
 
+        /* Animations */
         .fi{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
         .fi.v{opacity:1;transform:translateY(0)}
     </style>
@@ -213,7 +235,7 @@
 <section class="section section-red" id="wo">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title"><span class="title-icon">👤</span>我</h2>
+        <h2 class="section-title">我</h2>
         <div class="about-grid">
             <div class="about-card">
                 <div class="avatar" id="avatarBox"><span style="font-size:4.5rem">👤</span></div>
@@ -235,7 +257,7 @@
 <section class="section section-red" id="wen">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title"><span class="title-icon">📝</span>文</h2>
+        <h2 class="section-title">文</h2>
         <p class="section-desc" id="wDesc"></p>
         <div class="article-grid" id="artGrid"></div>
     </div>
@@ -244,7 +266,7 @@
 <section class="section section-green" id="yin">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title"><span class="title-icon">🌳</span>荫</h2>
+        <h2 class="section-title">荫</h2>
         <p class="section-desc" id="yDesc"></p>
         <div class="yin-grid" id="yinGrid"></div>
         <div class="yin-quote"><blockquote id="yQuote">无</blockquote><cite id="yQuoteA">无</cite></div>
@@ -254,7 +276,7 @@
 <section class="section section-red" id="xiangmu">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title"><span class="title-icon">🛠️</span>项目</h2>
+        <h2 class="section-title">项目</h2>
         <p class="section-desc" id="pDesc"></p>
         <div class="project-list" id="projList"></div>
     </div>
@@ -263,7 +285,7 @@
 <section class="section section-orange" id="xing">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title"><span class="title-icon">🐴</span>行</h2>
+        <h2 class="section-title">行</h2>
         <p class="section-desc" id="xDesc"></p>
         <div class="xing-grid" id="xingGrid"></div>
     </div>
@@ -271,6 +293,7 @@
 
 <footer class="footer"><p id="footer">用 ❤ 与代码构建 · 2026</p></footer>
 
+<!-- Article Modal -->
 <div class="modal-overlay" id="artModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -279,6 +302,7 @@
     </div>
 </div>
 
+<!-- Lightbox -->
 <div class="modal-overlay" id="lightbox" onclick="closeLightbox()">
     <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
     <img class="lightbox-img" id="lbImg" src="" alt="">
