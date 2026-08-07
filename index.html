@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>星空粒子画布</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+
+        canvas {
+            display: block;
+            cursor: crosshair;
+        }
+
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+            opacity: 0.7;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info">✨ 移动鼠标吸引星星 · 点击绽放烟花 ✨</div>
+
+    <script>
+        // 获取画布和绘图上下文
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // 设置画布大小为窗口大小
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // 鼠标位置
+        const mouse = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            isActive: false
+        };
+
+        // 粒子数组
+        let particles = [];
+
+        // 烟花数组
+        let fireworks = [];
+
+        // ==================== 工具函数 ====================
+
+        // 生成随机数
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // 计算两点距离
+        function distance(x1, y1, x2, y2) {
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // 随机颜色（偏蓝紫色调，像星空）
+        function randomColor() {
+            const colors = [
+                '#64B5F6', '#81D4FA', '#B39DDB',
+                '#CE93D8', '#80DEEA', '#FFF176',
+                '#FFAB91', '#A5D6A7'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // ==================== 星星粒子类 ====================
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+
+            // 初始化或重置星星
+            reset() {
+                this.x = random(0, canvas.width);
+                this.y = random(0, canvas.height);
+                this.size = random(1, 3);
+                this.baseSize = this.size;
+                this.speedX = random(-0.5, 0.5);
+                this.speedY = random(-0.5, 0.5);
+                this.color = randomColor();
+                this.opacity = random(0.3, 1);
+                this.twinkleSpeed = random(0.01, 0.03);
+                this.twinklePhase = random(0, Math.PI * 2);
+            }
+
+            // 更新位置
+            update() {
+                // 闪烁效果
+                this.twinklePhase += this.twinkleSpeed;
+                this.opacity = 0.3 + Math.abs(Math.sin(this.twinklePhase)) * 0.7;
+
+                // 鼠标吸引
+                if (mouse.isActive) {
+                    const dist = distance(this.x, this.y, mouse.x, mouse.y);
+                    if (dist < 200) {
+                        const force = (200 - dist) / 200;
+                        const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
+                        this.speedX += Math.cos(angle) * force * 0.1;
+                        this.speedY += Math.sin(angle) * force * 0.1;
+
+                        // 靠近鼠标时变大变亮
+                        this.size = this.baseSize + force * 2;
+                    } else {
+                        this.size = this.baseSize;
+                    }
+                }
+
+                // 移动
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // 速度衰减
+                this.speedX *= 0.99;
+                this.speedY *= 0.99;
+
+                // 边界处理：从另一边出现
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            // 绘制星星
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // ==================== 烟花粒子类 ====================
+
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = random(0, Math.PI * 2);
+                const speed = random(2, 8);
+                this.speedX = Math.cos(angle) * speed;
+                this.speedY = Math.sin(angle) * speed;
+                this.size = random(2, 4);
+                this.opacity = 1;
+                this.decay = random(0.015, 0.03);
+                this.gravity = 0.1;
+            }
+
+            update() {
+                this.speedY += this.gravity;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.speedX *= 0.98;
+                this.speedY *= 0.98;
+                this.opacity -= this.decay;
+                this.size *= 0.97;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = this.color;
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            get isDead() {
+                return this.opacity <= 0;
+            }
+        }
+
+        // ==================== 初始化星星 ====================
+
+        function initStars() {
+            const count = Math.min(200, Math.floor((canvas.width * canvas.height) / 5000));
+            particles = [];
+            for (let i = 0; i < count; i++) {
+                particles.push(new Star());
+            }
+        }
+
+        // ==================== 动画循环 ====================
+
+        function animate() {
+            // 半透明黑色背景，制造拖尾效果
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 更新和绘制星星
+            particles.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            // 更新和绘制烟花粒子
+            fireworks.forEach((fw, index) => {
+                fw.update();
+                fw.draw();
+                if (fw.isDead) {
+                    fireworks.splice(index, 1);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // ==================== 事件监听 ====================
+
+        // 鼠标移动
+        canvas.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.isActive = true;
+        });
+
+        // 鼠标离开
+        canvas.addEventListener('mouseleave', () => {
+            mouse.isActive = false;
+        });
+
+        // 鼠标点击：产生烟花
+        canvas.addEventListener('click', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            const color = randomColor();
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                fireworks.push(new FireworkParticle(x, y, color));
+            }
+        });
+
+        // 窗口大小改变时重置
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        });
+
+        // ==================== 启动 ====================
+        initStars();
+        animate();
+    </script>
+</body>
+</html>
