@@ -198,7 +198,7 @@ function renderAboutForm(){
     <div class="fg"><label>${d.intro_title}</label><textarea id="fIntro">${esc(d.intro_text)}</textarea></div>
     <div class="fg"><label>头像 (粘贴 base64 或点击上传)</label>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-            <label class="upload-zone"><input type="file" accept="image/*" onchange="uploadAvatar(this)">📷 选择图片</label>
+            <label class="upload-zone"><input type="file" accept="image/jpeg,image/png,image/gif,image/webp,image/*" onchange="uploadAvatar(this)">📷 选择图片</label>
             <span style="font-size:.8rem;color:#8E8EA0">或直接 Ctrl+V 粘贴图片到下方</span>
         </div>
         <img id="avatarPrev" class="img-preview" style="max-width:100px;max-height:100px;display:${d.avatar?'block':'none'}" src="${d.avatar||''}">
@@ -259,7 +259,7 @@ function showForm(it){
             break;
         case'yin':
             h+=`<div class="fg"><label>图片 (base64 或点击上传)</label>
-                <label class="upload-zone"><input type="file" accept="image/*" onchange="uploadYin(this)">📷 选择图片</label>
+                <label class="upload-zone"><input type="file" accept="image/jpeg,image/png,image/gif,image/webp,image/*" onchange="uploadYin(this)">📷 选择图片</label>
                 <input id="e0" value="${esc(it.img)}" placeholder="粘贴 base64 或上传" style="margin-top:6px">
                 <img id="prev0" class="img-preview" style="display:${it.img?'block':'none'}" src="${it.img||''}">
             </div>
@@ -280,7 +280,7 @@ function showForm(it){
             break;
         case'xing':
             h+=`<div class="fg"><label>图片 (base64 或点击上传)</label>
-                <label class="upload-zone"><input type="file" accept="image/*" onchange="uploadXing(this)">📷 选择图片</label>
+                <label class="upload-zone"><input type="file" accept="image/jpeg,image/png,image/gif,image/webp,image/*" onchange="uploadXing(this)">📷 选择图片</label>
                 <input id="e0" value="${esc(it.img)}" placeholder="粘贴 base64 或上传" style="margin-top:6px">
                 <img id="prev0" class="img-preview" style="display:${it.img?'block':'none'}" src="${it.img||''}">
             </div>
@@ -305,7 +305,7 @@ function showForm(it){
 function pasteImg(file,idx){
     const r=new FileReader();
     r.onload=e=>{
-        const val='data:image/jpeg;base64,'+e.target.result.split(',')[1];
+        const val=e.target.result;
         const inp=document.getElementById('e'+idx);
         if(inp)inp.value=val;
         const prev=document.getElementById('prev'+idx);
@@ -318,9 +318,8 @@ function uploadAvatar(inp){
     if(!inp.files[0])return;
     const r=new FileReader();
     r.onload=e=>{
-        const b64='data:image/jpeg;base64,'+e.target.result.split(',')[1];
-        document.getElementById('fAvatar').value=b64;
-        const p=document.getElementById('avatarPrev');p.src=b64;p.style.display='block';
+        document.getElementById('fAvatar').value=e.target.result;
+        const p=document.getElementById('avatarPrev');p.src=e.target.result;p.style.display='block';
     };r.readAsDataURL(inp.files[0]);
 }
 function uploadYin(inp){if(!inp.files[0])return;doUpload(inp.files[0],0,'e0','prev0')}
@@ -329,8 +328,7 @@ function uploadXing(inp){if(!inp.files[0])return;doUpload(inp.files[0],0,'e0','p
 function doUpload(file,idx,inpId,prevId){
     const r=new FileReader();
     r.onload=e=>{
-        let b64=e.target.result;
-        if(!b64.startsWith('data:'))b64='data:image/jpeg;base64,'+b64;
+        const b64=e.target.result;
         const inp=document.getElementById(inpId);if(inp)inp.value=b64;
         const prev=document.getElementById(prevId);if(prev){prev.src=b64;prev.style.display='block'}
     };r.readAsDataURL(file);
@@ -434,8 +432,7 @@ document.addEventListener('paste',e=>{
 function handlePasteImage(file){
     const r=new FileReader();
     r.onload=e=>{
-        let b64=e.target.result;
-        if(!b64.startsWith('data:'))b64='data:image/jpeg;base64,'+b64;
+        const b64=e.target.result;
         const ae=document.activeElement;
         if(ae&&ae.tagName==='INPUT'&&ae.id?.startsWith('e')){
             const idx=parseInt(ae.id.replace('e',''));
