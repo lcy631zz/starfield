@@ -1,0 +1,26 @@
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Secrets & credentials — NEVER commit these
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*credentials*
+*token*
+*secret*
+
+# OS metadata
+.Spotlight-V100
+.Trashes
+ehthumbs.db

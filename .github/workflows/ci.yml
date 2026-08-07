@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for secrets
+        run: |
+          echo "Scanning for accidentally committed secrets..."
+          SECRETS=$(grep -rilE \
+            '(password|secret|api_key|apikey|private_key|access_key)\s*[:=]' \
+            --include="*.html" --include="*.js" --include="*.css" --include="*.json" . 2>/dev/null | \
+            grep -v node_modules | grep -v '.git' || true)
+          if [ -n "$SECRETS" ]; then
+            echo "::error::Potential secrets found in files:"
+            echo "$SECRETS"
+            exit 1
+          fi
+          echo "No secrets detected."
+
+      - name: Validate content.json
+        run: |
+          python3 -c "
+import json, sys
+with open('content.json') as f:
+    d = json.load(f)
+for l in ['zh-CN','zh-TW','en']:
+    assert l in d, f'Missing lang: {l}'
+    assert 'site_name' in d[l]
+    assert 'articles' in d[l]
+    assert 'yin' in d[l]
+    assert 'projects' in d[l]
+    assert 'xing' in d[l]
+print('content.json valid')
+"
+
+      - name: Validate HTML
+        run: |
+          npm install -g html-validate 2>&1 | tail -1
+          htmlvalidate index.html

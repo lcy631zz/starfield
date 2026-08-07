@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>博客编辑器</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:#f5f5f5;color:#333;line-height:1.6}
+
+/* Top bar */
+.topbar{background:linear-gradient(135deg,#D4342F,#E85D57);color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(212,52,47,.2)}
+.topbar h1{font-size:1.2rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.lang-sw{display:flex;gap:2px;background:rgba(255,255,255,.2);border-radius:8px;padding:3px}
+.lang-btn{padding:5px 12px;border:none;background:0 0;color:#fff;font-size:.8rem;font-weight:500;border-radius:6px;cursor:pointer;transition:.2s;font-family:inherit}
+.lang-btn:hover{background:rgba(255,255,255,.15)}.lang-btn.on{background:#fff;color:#D4342F;font-weight:600}
+
+/* Guide bar */
+.guide{background:#fff;border-bottom:1px solid #e8e8e8;padding:12px 24px;font-size:.85rem;color:#666;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.guide .step{padding:3px 10px;background:#f0f0f0;border-radius:100px;font-size:.78rem;font-weight:500;color:#999}
+.guide .arrow{color:#ddd;font-size:1.2rem}
+.guide strong{color:#D4342F}
+
+/* Drop zone */
+.drop-zone{border:3px dashed #ddd;border-radius:16px;padding:48px 24px;text-align:center;margin:24px;background:#fafafa;transition:.3s;cursor:pointer}
+.drop-zone:hover,.drop-zone.over{border-color:#D4342F;background:#FFF5EC}
+.drop-zone.hidden{display:none}
+.drop-zone .icon{font-size:3rem;margin-bottom:12px;opacity:.6}
+.drop-zone h3{font-size:1.1rem;color:#333;margin-bottom:8px}
+.drop-zone p{color:#999;font-size:.88rem;max-width:400px;margin:0 auto 16px;line-height:1.6}
+.drop-zone .btn{padding:10px 24px;background:#D4342F;color:#fff;border:none;border-radius:8px;font-size:.9rem;font-weight:500;cursor:pointer;transition:.2s;font-family:inherit}
+.drop-zone .btn:hover{background:#B22F2A}
+.drop-zone input{display:none}
+
+/* Main layout */
+.app{display:none;max-width:1200px;margin:0 auto;padding:20px}
+.app.show{display:grid;grid-template-columns:200px 1fr;gap:20px}
+
+/* Sidebar */
+.sidebar{display:flex;flex-direction:column;gap:4px}
+.sb-section{font-size:.72rem;font-weight:600;color:#bbb;text-transform:uppercase;letter-spacing:1px;padding:16px 12px 6px}
+.sb-item{padding:10px 14px;border-radius:8px;cursor:pointer;font-size:.9rem;color:#555;transition:.15s;display:flex;align-items:center;gap:8px;border:none;background:0 0;width:100%;text-align:left;font-family:inherit}
+.sb-item:hover{background:rgba(212,52,47,.06);color:#D4342F}
+.sb-item.on{background:#fff;color:#D4342F;font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.sb-item .si{font-size:1.1rem;width:24px;text-align:center}
+
+/* Content panel */
+.panel{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;min-height:500px}
+.p-head{padding:20px 24px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.p-head h2{font-size:1.1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.p-body{padding:24px}
+
+/* Cards */
+.card{border:1px solid #eee;border-radius:10px;padding:16px;margin-bottom:12px;transition:.2s;background:#fff}
+.card:hover{border-color:#ddd;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.card-title{font-weight:600;font-size:.92rem;margin-bottom:4px;color:#222}
+.card-sub{font-size:.8rem;color:#aaa}
+.card-actions{display:flex;gap:6px;margin-top:10px}
+.empty{text-align:center;padding:48px 24px;color:#bbb}
+.empty .ei{font-size:2.5rem;margin-bottom:8px;opacity:.5;display:block}
+.empty p{font-size:.9rem}
+
+/* Forms */
+.form{margin-top:16px;padding:20px;background:#f8f9fa;border-radius:10px;border:1px solid #eee}
+.form h3{font-size:1rem;font-weight:600;color:#D4342F;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:.82rem;font-weight:500;color:#888;margin-bottom:5px}
+.fg input,.fg textarea{width:100%;padding:10px 12px;border:1px solid #e0e0e0;border-radius:8px;font-size:.88rem;font-family:inherit;transition:.2s;background:#fff;color:#333}
+.fg input:focus,.fg textarea:focus{outline:0;border-color:#D4342F;box-shadow:0 0 0 3px rgba(212,52,47,.08)}
+.fg textarea{min-height:80px;resize:vertical;line-height:1.7}
+.fg textarea.large{min-height:200px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f-acts{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
+
+/* Buttons */
+.btn{padding:8px 16px;border:none;border-radius:8px;font-size:.85rem;font-weight:500;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px;font-family:inherit}
+.btn-primary{background:#D4342F;color:#fff}.btn-primary:hover{background:#B22F2A}
+.btn-success{background:#4CAF82;color:#fff;font-size:.92rem;padding:10px 28px}.btn-success:hover{background:#3D8B6E}
+.btn-outline{background:#fff;color:#666;border:1px solid #ddd}.btn-outline:hover{border-color:#D4342F;color:#D4342F}
+.btn-danger{color:#e74c3c;background:#fff;border:1px solid #fdd}.btn-danger:hover{background:#fef0ef;border-color:#e74c3c}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Image upload */
+.img-upload{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+.upload-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:2px dashed #ddd;border-radius:8px;cursor:pointer;font-size:.85rem;color:#999;transition:.2s;background:#fff}
+.upload-btn:hover{border-color:#D4342F;color:#D4342F;background:#FFF5EC}
+.upload-btn input{display:none}
+.img-preview{max-width:100px;max-height:80px;border-radius:6px;border:1px solid #eee;object-fit:cover}
+.img-hint{font-size:.78rem;color:#bbb}
+.paste-zone{border:2px dashed #eee;border-radius:8px;padding:16px;text-align:center;margin-top:8px;color:#bbb;font-size:.82rem;transition:.2s}
+.paste-zone.active{border-color:#D4342F;background:#FFF5EC;color:#D4342F}
+
+/* Tags */
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{padding:4px 12px;background:#fff;border:1px solid #e74c3c;color:#e74c3c;border-radius:100px;font-size:.78rem;display:inline-flex;align-items:center;gap:4px}
+.tag .x{cursor:pointer;font-weight:700;margin-left:2px}.tag .x:hover{color:#c0392b}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);padding:12px 28px;border-radius:10px;color:#fff;font-weight:500;z-index:3000;opacity:0;transition:.3s;font-size:.9rem;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{background:#4CAF82}.toast.err{background:#e74c3c}
+
+/* Stats bar */
+.stats{display:flex;gap:8px;padding:12px 24px;background:#fff;border-bottom:1px solid #f0f0f0;flex-wrap:wrap}
+.stat{padding:4px 12px;background:#f8f8f8;border-radius:100px;font-size:.78rem;color:#888}
+.stat strong{color:#D4342F}
+
+/* Save bar */
+.save-bar{padding:16px 24px;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;background:#fafafa}
+.save-bar .info{font-size:.82rem;color:#aaa}
+.save-bar .actions{display:flex;gap:8px}
+
+/* Section: About hero fields */
+.hero-fields{margin-bottom:20px;padding-bottom:20px;border-bottom:2px solid #f0f0f0}
+.hero-fields .form{border:none;background:0 0;padding:0}
+.hero-fields .form h3{color:#E85D57;font-size:.95rem}
+.section-label{font-size:.72rem;font-weight:600;color:#bbb;text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;padding-top:16px;border-top:1px solid #f0f0f0}
+
+/* Responsive */
+@media(max-width:768px){
+    .app.show{grid-template-columns:1fr}
+    .sidebar{flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:4px}
+    .sb-section{display:none}
+    .sb-item{white-space:nowrap;padding:8px 12px;font-size:.82rem;flex-shrink:0}
+    .fg-row{grid-template-columns:1fr}
+    .topbar{padding:12px 16px}
+    .guide{padding:10px 16px;font-size:.8rem}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <h1>✿ 博客内容编辑器</h1>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <div class="lang-sw" id="langSw">
+            <button class="lang-btn on" data-lang="zh-CN">简中</button>
+            <button class="lang-btn" data-lang="zh-TW">繁體</button>
+            <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+        <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="openFile()">📂 打开文件</button>
+        <button class="btn btn-success" onclick="saveFile()">💾 保存</button>
+    </div>
+</div>
+
+<div class="guide">
+    <span><strong>使用步骤：</strong></span>
+    <span class="step">1. 点击「打开文件」选择 content.json</span>
+    <span class="arrow">→</span>
+    <span class="step">2. 左侧选择要编辑的版块</span>
+    <span class="arrow">→</span>
+    <span class="step">3. 编辑内容，图片可点击上传或粘贴</span>
+    <span class="arrow">→</span>
+    <span class="step">4. 点击「保存」下载</span>
+</div>
+
+<!-- Drop zone for initial load -->
+<div class="drop-zone" id="dropZone">
+    <div class="icon">📄</div>
+    <h3>把 content.json 拖到这里</h3>
+    <p>或者点击下方按钮选择文件。如果 content.json 和本文件在同一文件夹，编辑器会自动加载。</p>
+    <button class="btn" onclick="openFile()">选择 content.json 文件</button>
+    <input type="file" id="fileInput" accept=".json" onchange="readFileFromInput(event)">
+</div>
+
+<!-- Main app -->
+<div class="app" id="app">
+    <div class="stats" id="stats"></div>
+    <div class="sidebar" id="sidebar"></div>
+    <div class="panel" id="panel"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let DATA=null, curLang='zh-CN', curSec=null, dirty=false;
+
+const SECTIONS=[
+    {key:'hero',icon:'🏠',label:'主页横幅',section:'top'},
+    {key:'about',icon:'👤',label:'我（个人资料）',section:'top'},
+    {key:'articles',icon:'📝',label:'文',section:'mid'},
+    {key:'yin',icon:'🌿',label:'荫',section:'mid'},
+    {key:'xing',icon:'✈️',label:'行',section:'bot'},
+    {key:'projects',icon:'🛠️',label:'项目',section:'bot'},
+    {key:'footer',icon:'📎',label:'页脚',section:'bot'}
+];
+
+function init(){
+    // Language buttons
+    document.querySelectorAll('.lang-sw .lang-btn').forEach(b=>{
+        b.addEventListener('click',()=>{
+            if(!DATA)return;
+            curLang=b.dataset.lang;
+            document.querySelectorAll('.lang-sw .lang-btn').forEach(x=>x.classList.remove('on'));
+            b.classList.add('on');
+            renderSidebar();renderPanel();renderStats();
+        });
+    });
+
+    // Try auto-load content.json from same directory
+    fetch('content.json?'+Date.now(),{cache:'no-store'}).then(r=>{if(r.ok)return r.text()}).then(t=>{
+        if(t){try{loadData(JSON.parse(t));document.getElementById('dropZone').classList.add('hidden');document.getElementById('app').classList.add('show')}catch(e){}}}
+    }).catch(()=>{});
+
+    // Drag and drop
+    const dz=document.getElementById('dropZone');
+    dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});
+    dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+    dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');const f=e.dataTransfer.files[0];if(f)readFile(f)});
+    dz.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')document.getElementById('fileInput').click()});
+
+    // Global paste for images
+    document.addEventListener('paste',e=>{
+        if(!DATA)return;
+        const ae=document.activeElement;
+        if(!ae||(ae.tagName!=='INPUT'&&ae.tagName!=='TEXTAREA'))return;
+        const items=e.clipboardData?.items;if(!items)return;
+        for(let it of items){if(it.type.startsWith('image/')){e.preventDefault();const file=it.getAsFile();handlePaste(file);break;}}
+    });
+
+    // Auto-save prompt on close
+    window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+}
+
+function openFile(){document.getElementById('fileInput').click()}
+function readFileFromInput(e){const f=e.target.files[0];if(f)readFile(f)}
+
+function readFile(file){
+    const r=new FileReader();
+    r.onload=e=>{
+        try{const d=JSON.parse(e.target.result);if(!d['zh-CN']&&!d['zh-TW']&&!d['en'])throw new Error('not a valid content.json');loadData(d);document.getElementById('dropZone').classList.add('hidden');document.getElementById('app').classList.add('show');toast('文件已加载 ✓','ok')}
+        catch(err){toast('文件格式错误：'+err.message,'err')}
+    };
+    r.readAsText(file);
+}
+
+function loadData(d){
+    DATA=d;curLang=Object.keys(DATA)[0]||'zh-CN';
+    document.querySelectorAll('.lang-sw .lang-btn').forEach(b=>b.classList.toggle('on',b.dataset.lang===curLang));
+    // Ensure all languages have all keys
+    ['zh-CN','zh-TW','en'].forEach(l=>{
+        if(!DATA[l])DATA[l]=JSON.parse(JSON.stringify(DATA[curLang]));
+        ['hero','about','articles','yin','xing','projects','footer'].forEach(k=>{if(!DATA[l][k])DATA[l][k]=k==='footer'?'':JSON.parse(JSON.stringify(DATA[curLang][k]||{}))});
+    });
+    renderSidebar();renderPanel();renderStats();dirty=false;
+    // Update blog preview if open
+    if(typeof render==='function')render();
+}
+
+function renderStats(){
+    const d=DATA[curLang];
+    const c=(k)=>d[k]?.items?.length||0;
+    document.getElementById('stats').innerHTML=`
+        <div class="stat">📝 文章 <strong>${c('articles')}</strong></div>
+        <div class="stat">🌿 图片 <strong>${c('yin')+c('xing')}</strong></div>
+        <div class="stat">🛠️ 项目 <strong>${c('projects')}</strong></div>
+    `;
+}
+
+function renderSidebar(){
+    const sb=document.getElementById('sidebar');
+    let html='<div class="sb-section">内容版块</div>';
+    SECTIONS.forEach(s=>{
+        if(!DATA?.[curLang]?.[s.key])return;
+        const cnt=s.key==='hero'||s.key==='about'||s.key==='footer'?0:(DATA[curLang][s.key].items?.length||0);
+        const badge=cnt?`<span style="margin-left:auto;font-size:.72rem;color:#bbb">${cnt}</span>`:'';
+        html+=`<button class="sb-item${curSec===s.key?' on':''}" data-key="${s.key}"><span class="si">${s.icon}</span><span>${s.label}</span>${badge}</button>`;
+    });
+    html+=`<div class="sb-section" style="margin-top:auto">操作</div>
+        <button class="sb-item" onclick="addAllToContent()" style="color:#4CAF82"><span class="si">📋</span><span>展开全部内容</span></button>`;
+    sb.innerHTML=html;
+    sb.querySelectorAll('.sb-item[data-key]').forEach(b=>{
+        b.addEventListener('click',()=>{curSec=b.dataset.key;renderSidebar();renderPanel()});
+    });
+}
+
+function renderPanel(){
+    const p=document.getElementById('panel');
+    if(!curSec){p.innerHTML='<div class="p-body"><div class="empty"><span class="ei">👈</span><p>请选择一个版块开始编辑</p></div></div>';return}
+    const s=SECTIONS.find(s=>s.key===curSec);
+    let h=`<div class="p-head"><h2><span>${s.icon}</span> ${s.label}</h2></div><div class="p-body">`;
+    h+=renderSection(curSec);
+    h+='</div>';
+    p.innerHTML=h;
+    // Attach event listeners
+    setTimeout(()=>{},50);
+}
+
+function renderSection(key){
+    const d=DATA[curLang][key];
+    switch(key){
+        case'hero':return renderHero(d);
+        case'about':return renderAbout(d);
+        case'articles':return renderArticles(d);
+        case'yin':return renderYin(d);
+        case'xing':return renderXing(d);
+        case'projects':return renderProjects(d);
+        case'footer':return renderFooter(d);
+        default:return'';
+    }
+}
+
+function renderHero(d){
+    return `<div class="form"><h3>🏠 主页横幅</h3>
+        <div class="fg"><label>顶部标签 (badge)</label><input id="f_badge" value="${esc(d.badge)}" placeholder="欢迎来到我的博客"></div>
+        <div class="fg-row"><div class="fg"><label>标题 第1段</label><input id="f_t1" value="${esc(d.title_1)}"></div><div class="fg"><label>高亮文字1</label><input id="f_thl" value="${esc(d.title_hl)}"></div></div>
+        <div class="fg-row"><div class="fg"><label>标题 第2段</label><input id="f_t2" value="${esc(d.title_2)}"></div><div class="fg"><label>标题 第3段</label><input id="f_t3" value="${esc(d.title_3)}"></div></div>
+        <div class="fg-row"><div class="fg"><label>高亮文字2</label><input id="f_thl2" value="${esc(d.title_hl2)}"></div><div class="fg"><label>标题 第4段</label><input id="f_t4" value="${esc(d.title_4)}"></div></div>
+        <div class="fg"><label>副标题</label><textarea id="f_sub">${esc(d.subtitle)}</textarea></div>
+        <div class="fg"><label>按钮文字</label><input id="f_cta" value="${esc(d.cta)}"></div>
+        <div class="f-acts"><button class="btn btn-primary" onclick="saveSection('hero')">💾 保存</button></div></div>`;
+}
+
+function renderAbout(d){
+    let h=`<div class="hero-fields"><div class="form"><h3>👤 个人信息</h3>
+        <div class="fg-row"><div class="fg"><label>姓名</label><input id="f_name" value="${esc(d.name)}"></div><div class="fg"><label>身份 / 职业</label><input id="f_role" value="${esc(d.role)}"></div></div>
+        <div class="fg"><label>${d.intro_title||'自我介绍'}</label><textarea id="f_intro">${esc(d.intro_text)}</textarea></div>
+        <div class="fg"><label>头像</label>
+            <div class="img-upload">
+                <label class="upload-btn"><input type="file" accept="image/*" onchange="uploadAvatar(this)">📷 选择图片</label>
+                <span class="img-hint">或 Ctrl+V 粘贴</span>
+            </div>
+            <img id="prev_avatar" class="img-preview" style="display:${d.avatar?'block':'none'}" src="${d.avatar||''}">
+            <input type="hidden" id="f_avatar" value="${d.avatar||''}">
+        </div>
+        <div class="fg"><label>${d.skills_title||'技能'}（逗号分隔）</label><input id="f_skills" value="${esc((d.skills||[]).join(', '))}" placeholder="JavaScript, 摄影, ..."></div>
+        <div class="fg"><label>${d.info_title||'基本信息'}</label><textarea id="f_info">${esc(d.info_text)}</textarea></div>
+        <div class="f-acts"><button class="btn btn-primary" onclick="saveAbout()">💾 保存</button></div></div></div>`;
+
+    // Yin quote (shown in yin section but editable here)
+    const yd=DATA[curLang].yin||{};
+    h+=`<div class="section-label">荫 - 格言</div><div class="form"><h3>🌿 格言设置</h3>
+        <div class="fg"><label>格言内容</label><input id="f_quote" value="${esc(yd.quote||'')}"></div>
+        <div class="fg"><label>格言作者</label><input id="f_quote_author" value="${esc(yd.quote_author||'')}"></div>
+        <div class="f-acts"><button class="btn btn-primary" onclick="saveQuote()">💾 保存</button></div></div>`;
+    return h;
+}
+
+function renderArticles(d){
+    let h=`<div class="card" style="border:none;background:#f8f9fa;padding:14px 16px;margin-bottom:16px">
+        <div class="card-title">📝 ${d.items?.length||0} 篇文章</div>
+        <div class="card-sub">点击「添加」写一篇新文章</div></div>`;
+    if(d.items?.length){
+        d.items.forEach((a,i)=>{
+            h+=`<div class="card">
+                <div class="card-title">${esc(a.title)||'(无标题)'}</div>
+                <div class="card-sub">${[a.tag,a.date,a.readTime].filter(Boolean).join(' · ')||'无日期'}</div>
+                <div class="card-actions"><button class="btn btn-outline" onclick="editArticle(${i})">✏️ 编辑</button><button class="btn btn-danger" onclick="delItem('articles',${i})">🗑️</button></div>
+            </div>`;
+        });
+    }else{
+        h+=`<div class="empty"><span class="ei">📝</span><p>还没有文章，点击下方按钮添加一篇吧</p></div>`;
+    }
+    h+=articleForm();
+    return h;
+}
+
+function renderYin(d){
+    let h=`<div class="card" style="border:none;background:#E8F5EE;padding:14px 16px;margin-bottom:16px">
+        <div class="card-title" style="color:#2D5A42">🌿 ${d.items?.length||0} 张图片</div>
+        <div class="card-sub">添加你喜欢的二次元人物图片</div></div>`;
+    if(d.items?.length){
+        h+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px">';
+        d.items.forEach((y,i)=>{
+            h+=`<div class="card" style="padding:8px;text-align:center;cursor:pointer" onclick="editYin(${i})">
+                <img src="${y.img}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px">
+                <div style="font-size:.78rem;color:#888;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(y.caption)||'图片'}</div>
+            </div>`;
+        });
+        h+='</div>';
+    }else{
+        h+=`<div class="empty"><span class="ei">🌿</span><p>还没有图片</p></div>`;
+    }
+    h+=yinForm();
+    return h;
+}
+
+function renderXing(d){
+    let h=`<div class="card" style="border:none;background:#FFF5EC;padding:14px 16px;margin-bottom:16px">
+        <div class="card-title" style="color:#8B4A06">✈️ ${d.items?.length||0} 个旅行地点</div>
+        <div class="card-sub">记录你去过的地方</div></div>`;
+    if(d.items?.length){
+        d.items.forEach((x,i)=>{
+            h+=`<div class="card" style="cursor:pointer" onclick="editXing(${i})">
+                <div style="display:flex;gap:16px;align-items:center">
+                    <img src="${x.img}" style="width:120px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0">
+                    <div><div class="card-title">📍 ${esc(x.place)||'未知地点'}</div><div class="card-sub">${esc(x.caption)||''}</div></div>
+                </div>
+                <div class="card-actions"><button class="btn btn-outline" onclick="event.stopPropagation();editXing(${i})">✏️ 编辑</button><button class="btn btn-danger" onclick="event.stopPropagation();delItem('xing',${i})">🗑️</button></div>
+            </div>`;
+        });
+    }else{
+        h+=`<div class="empty"><span class="ei">✈️</span><p>还没有旅行记录</p></div>`;
+    }
+    h+=xingForm();
+    return h;
+}
+
+function renderProjects(d){
+    let h=`<div class="card" style="border:none;background:#f8f9fa;padding:14px 16px;margin-bottom:16px">
+        <div class="card-title">🛠️ ${d.items?.length||0} 个项目</div>
+        <div class="card-sub">展示你的个人项目</div></div>`;
+    if(d.items?.length){
+        d.items.forEach((p,i)=>{
+            h+=`<div class="card" style="cursor:pointer" onclick="editProject(${i})">
+                <div style="display:flex;align-items:center;gap:16px">
+                    <div style="width:48px;height:48px;border-radius:10px;background:#FFF0EF;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">${p.icon||'🌐'}</div>
+                    <div style="flex:1;min-width:0"><div class="card-title">${esc(p.title)||'(无标题)'}</div><div class="card-sub">${esc(p.desc)||''}</div></div>
+                </div>
+                <div class="card-actions"><button class="btn btn-outline" onclick="event.stopPropagation();editProject(${i})">✏️ 编辑</button><button class="btn btn-danger" onclick="event.stopPropagation();delItem('projects',${i})">🗑️</button></div>
+            </div>`;
+        });
+    }else{
+        h+=`<div class="empty"><span class="ei">🛠️</span><p>还没有项目</p></div>`;
+    }
+    h+=projectForm();
+    return h;
+}
+
+function renderFooter(d){
+    return `<div class="form"><h3>📎 页脚文字</h3>
+        <div class="fg"><label>页面底部显示的文字</label><input id="f_footer" value="${esc(d.footer||'')}"></div>
+        <div class="f-acts"><button class="btn btn-primary" onclick="saveFooter()">💾 保存</button></div></div>`;
+}
+
+// ========== Forms ==========
+
+function articleForm(editIdx=-1,data=null){
+    const a=data||{title:'',tag:'',date:'',readTime:'',excerpt:'',content:''};
+    const title=editIdx>=0?'编辑文章':'写新文章';
+    return `<div class="form" id="artForm"><h3>${title}</h3>
+        <div class="fg"><label>标题 *</label><input id="e_title" value="${esc(a.title)}"></div>
+        <div class="fg-row"><div class="fg"><label>标签</label><input id="e_tag" value="${esc(a.tag)}" placeholder="随笔、技术、生活"></div><div class="fg"><label>日期</label><input id="e_date" type="date" value="${a.date||''}"></div></div>
+        <div class="fg-row"><div class="fg"><label>阅读时长</label><input id="e_rt" value="${esc(a.readTime)}" placeholder="5 分钟"></div><div class="fg"><label>摘要</label><input id="e_excerpt" value="${esc(a.excerpt)}"></div></div>
+        <div class="fg"><label>正文</label><textarea id="e_content" class="large">${esc(a.content)}</textarea></div>
+        <div class="f-acts"><button class="btn btn-outline" onclick="cancelForm()">取消</button><button class="btn btn-primary" onclick="saveArticle(${editIdx})">💾 保存</button></div></div>`;
+}
+
+function yinForm(editIdx=-1,data=null){
+    const y=data||{img:'',caption:''};
+    const title=editIdx>=0?'编辑图片':'添加图片';
+    return `<div class="form" id="yinForm"><h3>${title}</h3>
+        <div class="fg"><label>图片</label>
+            <div class="img-upload">
+                <label class="upload-btn"><input type="file" accept="image/*" onchange="uploadImg(this,'prev_yin','f_yin_img')">📷 选择文件</label>
+                <span class="img-hint">或 Ctrl+V 粘贴</span>
+            </div>
+            <img id="prev_yin" class="img-preview" style="display:${y.img?'block':'none'}" src="${y.img||''}">
+            <input type="hidden" id="f_yin_img" value="${esc(y.img)}">
+        </div>
+        <div class="fg"><label>说明文字</label><input id="f_yin_cap" value="${esc(y.caption)}"></div>
+        <div class="f-acts"><button class="btn btn-outline" onclick="cancelForm()">取消</button><button class="btn btn-primary" onclick="saveYin(${editIdx})">💾 保存</button></div></div>`;
+}
+
+function xingForm(editIdx=-1,data=null){
+    const x=data||{img:'',place:'',caption:''};
+    const title=editIdx>=0?'编辑旅行':'添加旅行';
+    return `<div class="form" id="xingForm"><h3>${title}</h3>
+        <div class="fg"><label>照片</label>
+            <div class="img-upload">
+                <label class="upload-btn"><input type="file" accept="image/*" onchange="uploadImg(this,'prev_xing','f_xing_img')">📷 选择文件</label>
+                <span class="img-hint">或 Ctrl+V 粘贴</span>
+            </div>
+            <img id="prev_xing" class="img-preview" style="display:${x.img?'block':'none'}" src="${x.img||''}">
+            <input type="hidden" id="f_xing_img" value="${esc(x.img)}">
+        </div>
+        <div class="fg-row"><div class="fg"><label>地点</label><input id="f_xing_place" value="${esc(x.place)}"></div><div class="fg"><label>说明</label><input id="f_xing_cap" value="${esc(x.caption)}"></div></div>
+        <div class="f-acts"><button class="btn btn-outline" onclick="cancelForm()">取消</button><button class="btn btn-primary" onclick="saveXing(${editIdx})">💾 保存</button></div></div>`;
+}
+
+function projectForm(editIdx=-1,data=null){
+    const p=data||{icon:'🌐',title:'',desc:'',tags:[],link:''};
+    const title=editIdx>=0?'编辑项目':'添加项目';
+    return `<div class="form" id="projForm"><h3>${title}</h3>
+        <div class="fg"><label>图标 (emoji 或图片)</label>
+            <div class="img-upload">
+                <label class="upload-btn"><input type="file" accept="image/*" onchange="uploadImg(this,'prev_proj_icon','f_proj_icon')">📷 上传图标</label>
+                <span class="img-hint">或输入 emoji（如 🌐）</span>
+            </div>
+            <img id="prev_proj_icon" class="img-preview" style="display:${p.icon&&p.icon.startsWith('data')?'block':'none'}" src="${p.icon||''}">
+            <input type="hidden" id="f_proj_icon" value="${esc(p.icon)}">
+        </div>
+        <div class="fg"><label>项目名称 *</label><input id="f_proj_title" value="${esc(p.title)}"></div>
+        <div class="fg"><label>描述</label><textarea id="f_proj_desc">${esc(p.desc)}</textarea></div>
+        <div class="fg"><label>标签 (回车添加)</label><input id="f_proj_tags_input" value="${esc((p.tags||[]).join(', '))}" onkeydown="if(event.key==='Enter'){addProjTag();return false}">
+            <div class="tag-row" id="projTags">${(p.tags||[]).map((t,i)=>`<span class="tag">${esc(t)} <span class="x" onclick="rmProjTag(${i})">×</span></span>`).join('')}</div>
+            <input type="hidden" id="f_proj_tags" value="${esc((p.tags||[]).join(','))}">
+        </div>
+        <div class="fg"><label>链接</label><input id="f_proj_link" value="${esc(p.link)}" placeholder="https://..."></div>
+        <div class="f-acts"><button class="btn btn-outline" onclick="cancelForm()">取消</button><button class="btn btn-primary" onclick="saveProject(${editIdx})">💾 保存</button></div></div>`;
+}
+
+// ========== Upload helpers ==========
+
+function uploadAvatar(inp){if(!inp.files[0])return;doUpload(inp.files[0],'prev_avatar','f_avatar')}
+function uploadImg(inp,prevId,hidId){if(!inp.files[0])return;doUpload(inp.files[0],prevId,hidId)}
+
+function doUpload(file,prevId,hidId){
+    const r=new FileReader();
+    r.onload=e=>{
+        const b64=e.target.result;
+        document.getElementById(hidId).value=b64;
+        const p=document.getElementById(prevId);if(p){p.src=b64;p.style.display='block'}
+        toast('图片已加载 ✓','ok');
+    };r.readAsDataURL(file);
+}
+
+function handlePaste(file){
+    const ae=document.activeElement;
+    const r=new FileReader();
+    r.onload=e=>{
+        const b64=e.target.result;
+        // Find which form is visible
+        const yinPrev=document.getElementById('prev_yin');
+        const xingPrev=document.getElementById('prev_xing');
+        const projPrev=document.getElementById('prev_proj_icon');
+        if(yinPrev&&yinPrev.offsetParent!=='null'){document.getElementById('f_yin_img').value=b64;yinPrev.src=b64;yinPrev.style.display='block'}
+        else if(xingPrev&&xingPrev.offsetParent!=='null'){document.getElementById('f_xing_img').value=b64;xingPrev.src=b64;xingPrev.style.display='block'}
+        else if(projPrev&&projPrev.offsetParent!=='null'){document.getElementById('f_proj_icon').value=b64;projPrev.src=b64;projPrev.style.display='block'}
+        toast('图片已粘贴 ✓','ok');
+    };r.readAsDataURL(file);
+}
+
+// ========== Save handlers ==========
+
+function saveSection(key){
+    const d=DATA[curLang][key];
+    d.badge=v('f_badge');d.title_1=v('f_t1');d.title_hl=v('f_thl');
+    d.title_2=v('f_t2');d.title_3=v('f_t3');d.title_hl2=v('f_thl2');d.title_4=v('f_t4');
+    d.subtitle=v('f_sub');d.cta=v('f_cta');
+    dirty=true;toast('已保存 ✓','ok');
+}
+function saveAbout(){
+    const d=DATA[curLang].about;
+    d.name=v('f_name');d.role=v('f_role');d.intro_text=v('f_intro');
+    d.avatar=v('f_avatar');d.info_text=v('f_info');
+    d.skills=v('f_skills').split(',').map(s=>s.trim()).filter(Boolean);
+    dirty=true;renderStats();toast('个人信息已保存 ✓','ok');
+}
+function saveQuote(){
+    DATA[curLang].yin.quote=v('f_quote');DATA[curLang].yin.quote_author=v('f_quote_author');
+    dirty=true;toast('格言已保存 ✓','ok');
+}
+function saveFooter(){DATA[curLang].footer=v('f_footer');dirty=true;toast('页脚已保存 ✓','ok')}
+
+function editArticle(i){curSec='articles';renderPanel();setTimeout(()=>{const f=document.getElementById('artForm');if(f){f.scrollIntoView({behavior:'smooth'});f.style.animation='modalIn .3s ease'}},100);setTimeout(()=>{if(document.getElementById('e_title')){document.getElementById('e_title').focus()}},200)}
+
+function saveArticle(editIdx){
+    const obj={title:v('e_title'),tag:v('e_tag'),date:v('e_date'),readTime:v('e_rt'),excerpt:v('e_excerpt'),content:v('e_content')};
+    if(!obj.title){toast('请输入标题','err');return}
+    const items=[...DATA[curLang].articles.items];
+    if(editIdx>=0)items[editIdx]=obj;else items.push(obj);
+    DATA[curLang].articles.items=items;dirty=true;
+    curSec='articles';renderSidebar();renderPanel();renderStats();toast('文章已保存 ✓','ok');
+}
+function delItem(sec,i){
+    if(!confirm('确定删除？'))return;
+    DATA[curLang][sec].items.splice(i,1);dirty=true;
+    renderSidebar();renderPanel();renderStats();toast('已删除','ok');
+}
+
+function editYin(i){curSec='yin';renderPanel();setTimeout(()=>{const f=document.getElementById('yinForm');if(f){f.scrollIntoView({behavior:'smooth'})}},100)}
+function saveYin(editIdx){
+    const obj={img:v('f_yin_img'),caption:v('f_yin_cap')};
+    if(!obj.img){toast('请添加图片','err');return}
+    const items=[...DATA[curLang].yin.items];
+    if(editIdx>=0)items[editIdx]=obj;else items.push(obj);
+    DATA[curLang].yin.items=items;dirty=true;
+    curSec='yin';renderSidebar();renderPanel();renderStats();toast('图片已保存 ✓','ok');
+}
+
+function editXing(i){curSec='xing';renderPanel();setTimeout(()=>{const f=document.getElementById('xingForm');if(f){f.scrollIntoView({behavior:'smooth'})}},100)}
+function saveXing(editIdx){
+    const obj={img:v('f_xing_img'),place:v('f_xing_place'),caption:v('f_xing_cap')};
+    if(!obj.img){toast('请添加照片','err');return}
+    const items=[...DATA[curLang].xing.items];
+    if(editIdx>=0)items[editIdx]=obj;else items.push(obj);
+    DATA[curLang].xing.items=items;dirty=true;
+    curSec='xing';renderSidebar();renderPanel();renderStats();toast('旅行已保存 ✓','ok');
+}
+
+function editProject(i){curSec='projects';renderPanel();setTimeout(()=>{const f=document.getElementById('projForm');if(f){f.scrollIntoView({behavior:'smooth'})}},100)}
+function saveProject(editIdx){
+    const obj={icon:v('f_proj_icon')||'🌐',title:v('f_proj_title'),desc:v('f_proj_desc'),tags:getProjTags(),link:v('f_proj_link')};
+    if(!obj.title){toast('请输入项目名称','err');return}
+    const items=[...DATA[curLang].projects.items];
+    if(editIdx>=0)items[editIdx]=obj;else items.push(obj);
+    DATA[curLang].projects.items=items;dirty=true;
+    curSec='projects';renderSidebar();renderPanel();renderStats();toast('项目已保存 ✓','ok');
+}
+
+function addProjTag(){
+    const inp=document.getElementById('f_proj_tags_input');
+    const v=inp.value.trim();if(!v)return;
+    const tags=getProjTags();if(!tags.includes(v)){tags.push(v);document.getElementById('f_proj_tags').value=tags.join(',')}
+    inp.value='';updateProjTags();
+}
+function rmProjTag(i){const tags=getProjTags();tags.splice(i,1);document.getElementById('f_proj_tags').value=tags.join(',');updateProjTags()}
+function getProjTags(){return(document.getElementById('f_proj_tags')?.value||'').split(',').filter(Boolean)}
+function updateProjTags(){const r=document.getElementById('projTags');if(!r)return;r.innerHTML=getProjTags().map((t,i)=>`<span class="tag">${esc(t)} <span class="x" onclick="rmProjTag(${i})">×</span></span>`).join('')}
+
+function cancelForm(){dirty=true;renderPanel()}
+
+// ========== Save / Export ==========
+
+function saveFile(){
+    if(!DATA){toast('请先打开文件','err');return}
+    const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='content.json';a.click();URL.revokeObjectURL(a.href);
+    dirty=false;toast('content.json 已下载 ✓','ok');
+}
+
+function addAllToContent(){
+    // Expand all content items into view
+    const panels=['articles','yin','xing','projects'];
+    panels.forEach(p=>{if(DATA[curLang][p]?.items?.length)curSec=p});
+    renderSidebar();renderPanel();
+}
+
+// ========== Utils ==========
+
+function v(id){return document.getElementById(id)?.value?.trim()||''}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function toast(msg,type){
+    const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type;t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// Paste zone highlight
+document.addEventListener('paste',()=>{
+    document.querySelectorAll('.paste-zone').forEach(z=>{z.classList.add('active');setTimeout(()=>z.classList.remove('active'),1500)});
+},true);
+
+init();
+</script>
+</body>
+</html>
