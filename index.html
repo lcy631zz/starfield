@@ -2,277 +2,1336 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>星空粒子画布</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的空间</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* ============================================
+           CSS Variables & Reset
+           ============================================ */
+        :root {
+            --red-primary: #D4342F;
+            --red-dark: #B22F2A;
+            --red-light: #FFF0EF;
+            --red-accent: #E85D57;
+
+            --green-primary: #4CAF82;
+            --green-dark: #3D8B6E;
+            --green-light: #E8F5EE;
+            --green-pale: #F0FAF5;
+            --green-mint: #A8D5BA;
+
+            --text-primary: #1A1A2E;
+            --text-secondary: #5A5A72;
+            --text-tertiary: #8E8EA0;
+
+            --bg-white: #FFFFFF;
+            --bg-warm: #FAFAF8;
+            --bg-light: #F5F4F1;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+
+            --font-serif: 'Noto Serif SC', 'STSong', serif;
+            --font-sans: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
         }
 
         body {
-            background: #000;
-            overflow: hidden;
-            font-family: 'Microsoft YaHei', sans-serif;
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            background: var(--bg-white);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
         }
 
-        canvas {
-            display: block;
-            cursor: crosshair;
-        }
-
-        #info {
+        /* ============================================
+           Navigation
+           ============================================ */
+        .navbar {
             position: fixed;
-            top: 20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navbar-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            font-family: var(--font-serif);
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--red-primary);
+            text-decoration: none;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--red-primary), var(--red-accent));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 6px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 8px 18px;
+            border-radius: 100px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--red-primary);
+            background: var(--red-light);
+        }
+
+        .nav-links a.active {
+            color: var(--red-primary);
+            background: var(--red-light);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           Hero Section
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-white);
+        }
+
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.35;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 40px 20px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            background: var(--red-light);
+            color: var(--red-primary);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 28px;
+            letter-spacing: 2px;
+        }
+
+        .hero-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2.8rem, 7vw, 5rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--red-primary), var(--red-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto 36px;
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, var(--red-primary), var(--red-accent));
+            color: white;
+            text-decoration: none;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(212, 52, 47, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(212, 52, 47, 0.4);
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 36px;
             left: 50%;
             transform: translateX(-50%);
-            color: #fff;
-            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .scroll-hint .arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid var(--text-tertiary);
+            border-bottom: 2px solid var(--text-tertiary);
+            transform: rotate(45deg);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        /* ============================================
+           Section Common
+           ============================================ */
+        .section {
+            padding: 100px 24px;
+            position: relative;
+        }
+
+        .section-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin-bottom: 48px;
+            font-weight: 300;
+        }
+
+        .section-divider {
+            width: 48px;
+            height: 3px;
+            border-radius: 3px;
+            margin-bottom: 20px;
+        }
+
+        /* ============================================
+           我 Section (About)
+           ============================================ */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .about-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 28px;
             text-align: center;
-            opacity: 0.7;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0,0,0,0.04);
+            position: sticky;
+            top: 88px;
+        }
+
+        .avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border: 4px solid var(--bg-white);
+            box-shadow: 0 0 0 3px var(--red-primary), var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fce4e4, #f8d7d6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4.5rem;
+        }
+
+        .about-name {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .about-role {
+            color: var(--red-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .about-links {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .about-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            background: var(--bg-light);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .about-links a:hover {
+            background: var(--red-light);
+            color: var(--red-primary);
+            transform: translateY(-2px);
+        }
+
+        .about-details {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .about-block h3 {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .about-block h3 .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--red-light);
+            color: var(--red-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .about-block p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.85;
+            padding-left: 40px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-left: 40px;
+        }
+
+        .skill-tag {
+            padding: 5px 14px;
+            background: var(--bg-light);
+            border-radius: 100px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            transition: var(--transition);
+        }
+
+        .skill-tag:hover {
+            background: var(--red-light);
+            color: var(--red-primary);
+        }
+
+        /* ============================================
+           文 Section (Articles)
+           ============================================ */
+        #wen {
+            background: var(--bg-warm);
+        }
+
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .article-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(212, 52, 47, 0.15);
+        }
+
+        .article-card .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        .article-card .card-tag {
+            padding: 3px 10px;
+            background: var(--red-light);
+            color: var(--red-primary);
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 0.75rem;
+        }
+
+        .article-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .article-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-card .card-footer {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-tertiary);
+        }
+
+        /* ============================================
+           荫 Section (Special - Green Theme)
+           ============================================ */
+        #yin {
+            background: linear-gradient(180deg, #FFFFFF 0%, var(--green-pale) 30%, #E8F5EE 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #yin::before {
+            content: '';
+            position: absolute;
+            top: -120px;
+            right: -120px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(76, 175, 130, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
             pointer-events: none;
-            text-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
+        }
+
+        #yin::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(168, 213, 186, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        #yin .section-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        #yin .section-label {
+            color: var(--green-primary);
+        }
+
+        #yin .section-divider {
+            background: linear-gradient(90deg, var(--green-primary), var(--green-mint));
+        }
+
+        #yin .section-title {
+            color: #2D5A42;
+        }
+
+        #yin .section-desc {
+            color: #5A7D6A;
+        }
+
+        .yin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+        }
+
+        .yin-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            border: 1px solid rgba(76, 175, 130, 0.12);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .yin-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(76, 175, 130, 0.15);
+            border-color: rgba(76, 175, 130, 0.25);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .yin-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            background: var(--green-light);
+            color: var(--green-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin: 0 auto 16px;
+            transition: var(--transition);
+        }
+
+        .yin-card:hover .yin-icon {
+            background: var(--green-primary);
+            color: white;
+            transform: scale(1.08);
+        }
+
+        .yin-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #2D5A42;
+            margin-bottom: 8px;
+        }
+
+        .yin-card p {
+            color: #6B8F7B;
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+
+        .yin-quote {
+            margin-top: 48px;
+            padding: 32px 36px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--green-primary);
+            text-align: center;
+        }
+
+        .yin-quote blockquote {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            color: #3D6B52;
+            font-style: italic;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .yin-quote cite {
+            color: var(--green-dark);
+            font-size: 0.85rem;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* ============================================
+           项目 Section (Projects)
+           ============================================ */
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .project-item {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 24px 28px;
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .project-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: rgba(212, 52, 47, 0.12);
+            transform: translateX(4px);
+        }
+
+        .project-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-sm);
+            background: var(--red-light);
+            color: var(--red-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .project-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-info h3 {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .project-info p {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .project-tag {
+            padding: 4px 12px;
+            background: var(--bg-light);
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .project-arrow {
+            color: var(--text-tertiary);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .project-item:hover .project-arrow {
+            color: var(--red-primary);
+            transform: translateX(4px);
+        }
+
+        /* ============================================
+           Footer
+           ============================================ */
+        .footer {
+            padding: 40px 24px;
+            text-align: center;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            color: var(--text-tertiary);
+            font-size: 0.85rem;
+        }
+
+        .footer .red-dot {
+            color: var(--red-primary);
+        }
+
+        /* ============================================
+           Responsive
+           ============================================ */
+        @media (max-width: 768px) {
+            .navbar-inner {
+                padding: 0 16px;
+                height: 56px;
+            }
+
+            .nav-links a {
+                padding: 6px 12px;
+                font-size: 0.82rem;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 0.85rem;
+            }
+
+            .section {
+                padding: 64px 16px;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .about-card {
+                position: static;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .yin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .project-tags {
+                align-self: flex-start;
+            }
+        }
+
+        /* ============================================
+           Animations
+           ============================================ */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <div id="info">✨ 移动鼠标吸引星星 · 点击绽放烟花 ✨</div>
 
+    <!-- ==================== Navigation ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-inner">
+            <a href="#" class="logo">
+                <span class="logo-icon">✿</span>
+                空间
+            </a>
+            <ul class="nav-links">
+                <li><a href="#wo" class="active">我</a></li>
+                <li><a href="#wen">文</a></li>
+                <li><a href="#yin">荫</a></li>
+                <li><a href="#xiangmu">项目</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ==================== Hero ==================== -->
+    <section class="hero" id="hero">
+        <canvas class="hero-canvas" id="starCanvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge">欢迎来到我的世界</div>
+            <h1 class="hero-title">
+                记录<span class="highlight">生活</span>与<br>探索<span class="highlight">技术</span>的旅程
+            </h1>
+            <p class="hero-subtitle">
+                这里是我在互联网上的一方小天地，记录着思考、创作与成长的点滴。
+            </p>
+            <a href="#wo" class="hero-cta">
+                了解更多
+                <span>↓</span>
+            </a>
+        </div>
+        <div class="scroll-hint">
+            <span>向下滚动</span>
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <!-- ==================== 我 Section ==================== -->
+    <section class="section" id="wo">
+        <div class="section-inner">
+            <div class="section-divider" style="background: var(--red-primary);"></div>
+            <span class="section-label" style="color: var(--red-primary);">About Me</span>
+            <h2 class="section-title">关于我</h2>
+            <p class="section-desc">一位热爱技术与设计的创作者，在代码与文字之间寻找平衡。</p>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="avatar">
+                        <div class="avatar-placeholder">👤</div>
+                    </div>
+                    <h3 class="about-name">Your Name</h3>
+                    <p class="about-role">开发者 / 写作者 / 终身学习者</p>
+                    <div class="about-links">
+                        <a href="#" title="GitHub">⚡</a>
+                        <a href="#" title="Twitter">𝕏</a>
+                        <a href="#" title="Email">✉</a>
+                        <a href="#" title="Blog">📝</a>
+                    </div>
+                </div>
+
+                <div class="about-details">
+                    <div class="about-block">
+                        <h3>
+                            <span class="icon">💬</span>
+                            自我介绍
+                        </h3>
+                        <p>
+                            你好！我是一名热爱技术与创造的开发者。我喜欢探索新的技术领域，
+                            也享受用文字记录思考和感悟的过程。相信持续学习和分享能够带来成长，
+                            希望这里的内容能给你带来一些启发和帮助。
+                        </p>
+                    </div>
+
+                    <div class="about-block">
+                        <h3>
+                            <span class="icon">🛠️</span>
+                            技能与工具
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">HTML / CSS</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">Hugo</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">Linux</span>
+                            <span class="skill-tag">UI Design</span>
+                        </div>
+                    </div>
+
+                    <div class="about-block">
+                        <h3>
+                            <span class="icon">📍</span>
+                            基本信息
+                        </h3>
+                        <p>
+                            📍 中国 &nbsp;·&nbsp; 🎓 计算机科学 &nbsp;·&nbsp;
+                            💼 软件开发 &nbsp;·&nbsp; 🎯 专注于 Web 技术与开源
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 文 Section ==================== -->
+    <section class="section" id="wen">
+        <div class="section-inner">
+            <div class="section-divider" style="background: var(--red-primary);"></div>
+            <span class="section-label" style="color: var(--red-primary);">Articles</span>
+            <h2 class="section-title">文章</h2>
+            <p class="section-desc">记录技术探索、学习心得与生活中的思考。</p>
+
+            <div class="article-grid">
+                <a href="#" class="article-card fade-in">
+                    <div class="card-meta">
+                        <span class="card-tag">技术</span>
+                        <span>2026-08-05</span>
+                    </div>
+                    <h3>Hugo 静态网站搭建完全指南</h3>
+                    <p>从零开始使用 Hugo + Congo 主题搭建个人网站，包含部署到 GitHub Pages 的完整步骤和常见问题解决。</p>
+                    <div class="card-footer">
+                        <span>阅读时间 8 分钟</span>
+                        <span>阅读更多 →</span>
+                    </div>
+                </a>
+
+                <a href="#" class="article-card fade-in">
+                    <div class="card-meta">
+                        <span class="card-tag">随笔</span>
+                        <span>2026-07-28</span>
+                    </div>
+                    <h3>在代码与文字之间</h3>
+                    <p>作为一名开发者，如何平衡技术深耕与人文思考？这是我的一些心得与体会。</p>
+                    <div class="card-footer">
+                        <span>阅读时间 5 分钟</span>
+                        <span>阅读更多 →</span>
+                    </div>
+                </a>
+
+                <a href="#" class="article-card fade-in">
+                    <div class="card-meta">
+                        <span class="card-tag">工具</span>
+                        <span>2026-07-15</span>
+                    </div>
+                    <h3>提升项目安全性的 Git 实践</h3>
+                    <p>如何利用 Dependabot、分支保护、Pre-commit Hooks 等工具构建多层次的代码安全防线。</p>
+                    <div class="card-footer">
+                        <span>阅读时间 6 分钟</span>
+                        <span>阅读更多 →</span>
+                    </div>
+                </a>
+
+                <a href="#" class="article-card fade-in">
+                    <div class="card-meta">
+                        <span class="card-tag">设计</span>
+                        <span>2026-06-30</span>
+                    </div>
+                    <h3>极简主义 UI 设计原则</h3>
+                    <p>少即是多——探讨如何用最简单的元素创造出优雅且实用的用户界面。</p>
+                    <div class="card-footer">
+                        <span>阅读时间 4 分钟</span>
+                        <span>阅读更多 →</span>
+                    </div>
+                </a>
+
+                <a href="#" class="article-card fade-in">
+                    <div class="card-meta">
+                        <span class="card-tag">技术</span>
+                        <span>2026-06-12</span>
+                    </div>
+                    <h3>Canvas 粒子动画入门</h3>
+                    <p>使用 HTML5 Canvas 创建星空粒子效果，涵盖粒子系统、鼠标交互和性能优化。</p>
+                    <div class="card-footer">
+                        <span>阅读时间 10 分钟</span>
+                        <span>阅读更多 →</span>
+                    </div>
+                </a>
+
+                <a href="#" class="article-card fade-in">
+                    <div class="card-meta">
+                        <span class="card-tag">生活</span>
+                        <span>2026-05-20</span>
+                    </div>
+                    <h3>程序员的日常与思考</h3>
+                    <p>日常开发中的一些感悟，关于效率、习惯和如何在快节奏中保持内心的平静。</p>
+                    <div class="card-footer">
+                        <span>阅读时间 3 分钟</span>
+                        <span>阅读更多 →</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 荫 Section (Green Theme) ==================== -->
+    <section class="section" id="yin">
+        <div class="section-inner">
+            <div class="section-divider"></div>
+            <span class="section-label">Sanctuary</span>
+            <h2 class="section-title">树荫</h2>
+            <p class="section-desc">一方宁静的角落，种下思绪，收获平和。</p>
+
+            <div class="yin-grid">
+                <div class="yin-card fade-in">
+                    <div class="yin-icon">🌱</div>
+                    <h3>阅读清单</h3>
+                    <p>记录正在读的书、读过的好书，以及每一本带来的思考与改变。</p>
+                </div>
+
+                <div class="yin-card fade-in">
+                    <div class="yin-icon">🎵</div>
+                    <h3>音乐角落</h3>
+                    <p>分享让我沉浸其中的音乐，从古典到爵士，从后摇到 ambient。</p>
+                </div>
+
+                <div class="yin-card fade-in">
+                    <div class="yin-icon">📷</div>
+                    <h3>光影碎片</h3>
+                    <p>用镜头捕捉生活中的美好瞬间，一花一木，一人一景。</p>
+                </div>
+
+                <div class="yin-card fade-in">
+                    <div class="yin-icon">🍵</div>
+                    <h3>慢生活</h3>
+                    <p>关于生活方式的思考——如何在快节奏中找到属于自己的节奏。</p>
+                </div>
+
+                <div class="yin-card fade-in">
+                    <div class="yin-icon">🌿</div>
+                    <h3>自然笔记</h3>
+                    <p>观察四季更迭，记录花草树木，感受自然最纯粹的治愈力。</p>
+                </div>
+
+                <div class="yin-card fade-in">
+                    <div class="yin-icon">💭</div>
+                    <h3>随想录</h3>
+                    <p>不成体系的碎片化思考，灵感、感悟、深夜的胡思乱想。</p>
+                </div>
+            </div>
+
+            <div class="yin-quote">
+                <blockquote>
+                    "庭中有树，其荫如盖。风过时，叶声沙沙，像是大自然最温柔的低语。"
+                </blockquote>
+                <cite>—— 写给每一个需要宁静的你</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 项目 Section ==================== -->
+    <section class="section" id="xiangmu">
+        <div class="section-inner">
+            <div class="section-divider" style="background: var(--red-primary);"></div>
+            <span class="section-label" style="color: var(--red-primary);">Projects</span>
+            <h2 class="section-title">项目</h2>
+            <p class="section-desc">一些我投入时间和热情去做的事情。</p>
+
+            <div class="project-list">
+                <a href="#" class="project-item fade-in">
+                    <div class="project-icon">🌐</div>
+                    <div class="project-info">
+                        <h3>个人网站</h3>
+                        <p>基于 Hugo + Congo 主题搭建的静态博客，托管于 GitHub Pages，用于分享技术文章和个人随笔。</p>
+                    </div>
+                    <div class="project-tags">
+                        <span class="project-tag">Hugo</span>
+                        <span class="project-tag">GitHub Pages</span>
+                    </div>
+                    <span class="project-arrow">→</span>
+                </a>
+
+                <a href="#" class="project-item fade-in">
+                    <div class="project-icon">✨</div>
+                    <div class="project-info">
+                        <h3>星空粒子画布</h3>
+                        <p>基于 HTML5 Canvas 的交互式星空粒子动画，支持鼠标吸引和点击烟花效果。</p>
+                    </div>
+                    <div class="project-tags">
+                        <span class="project-tag">Canvas</span>
+                        <span class="project-tag">JavaScript</span>
+                    </div>
+                    <span class="project-arrow">→</span>
+                </a>
+
+                <a href="#" class="project-item fade-in">
+                    <div class="project-icon">🔒</div>
+                    <div class="project-info">
+                        <h3>项目安全加固套件</h3>
+                        <p>为 GitHub 项目配置 Dependabot、分支保护、CI 检查和 Pre-commit Hooks 的安全实践方案。</p>
+                    </div>
+                    <div class="project-tags">
+                        <span class="project-tag">GitHub</span>
+                        <span class="project-tag">Security</span>
+                        <span class="project-tag">CI/CD</span>
+                    </div>
+                    <span class="project-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== Footer ==================== -->
+    <footer class="footer">
+        <p>用 <span class="red-dot">❤</span> 与代码构建 · 2026</p>
+    </footer>
+
+    <!-- ==================== JavaScript ==================== -->
     <script>
-        // 获取画布和绘图上下文
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+        // ---- Starfield Canvas Background ----
+        (function() {
+            const canvas = document.getElementById('starCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let fireworks = [];
 
-        // 设置画布大小为窗口大小
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+            function resize() {
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
 
-        // 鼠标位置
-        const mouse = {
-            x: canvas.width / 2,
-            y: canvas.height / 2,
-            isActive: false
-        };
-
-        // 粒子数组
-        let particles = [];
-
-        // 烟花数组
-        let fireworks = [];
-
-        // ==================== 工具函数 ====================
-
-        // 生成随机数
-        function random(min, max) {
-            return Math.random() * (max - min) + min;
-        }
-
-        // 计算两点距离
-        function distance(x1, y1, x2, y2) {
-            const dx = x2 - x1;
-            const dy = y2 - y1;
-            return Math.sqrt(dx * dx + dy * dy);
-        }
-
-        // 随机颜色（偏蓝紫色调，像星空）
-        function randomColor() {
-            const colors = [
-                '#64B5F6', '#81D4FA', '#B39DDB',
-                '#CE93D8', '#80DEEA', '#FFF176',
-                '#FFAB91', '#A5D6A7'
-            ];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        // ==================== 星星粒子类 ====================
-
-        class Star {
-            constructor() {
-                this.reset();
+            function random(min, max) {
+                return Math.random() * (max - min) + min;
             }
 
-            // 初始化或重置星星
-            reset() {
-                this.x = random(0, canvas.width);
-                this.y = random(0, canvas.height);
-                this.size = random(1, 3);
-                this.baseSize = this.size;
-                this.speedX = random(-0.5, 0.5);
-                this.speedY = random(-0.5, 0.5);
-                this.color = randomColor();
-                this.opacity = random(0.3, 1);
-                this.twinkleSpeed = random(0.01, 0.03);
-                this.twinklePhase = random(0, Math.PI * 2);
+            function randomColor() {
+                const colors = [
+                    '#64B5F6', '#81D4FA', '#B39DDB',
+                    '#CE93D8', '#80DEEA', '#FFF176',
+                    '#FFAB91', '#A5D6A7', '#F48FB1'
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
             }
 
-            // 更新位置
-            update() {
-                // 闪烁效果
-                this.twinklePhase += this.twinkleSpeed;
-                this.opacity = 0.3 + Math.abs(Math.sin(this.twinklePhase)) * 0.7;
+            function dist(x1, y1, x2, y2) {
+                return Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+            }
 
-                // 鼠标吸引
-                if (mouse.isActive) {
-                    const dist = distance(this.x, this.y, mouse.x, mouse.y);
-                    if (dist < 200) {
-                        const force = (200 - dist) / 200;
-                        const angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
-                        this.speedX += Math.cos(angle) * force * 0.1;
-                        this.speedY += Math.sin(angle) * force * 0.1;
-
-                        // 靠近鼠标时变大变亮
-                        this.size = this.baseSize + force * 2;
+            class Star {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = random(0, canvas.width);
+                    this.y = random(0, canvas.height);
+                    this.size = random(0.8, 2.5);
+                    this.baseSize = this.size;
+                    this.vx = random(-0.3, 0.3);
+                    this.vy = random(-0.3, 0.3);
+                    this.color = randomColor();
+                    this.opacity = random(0.2, 0.8);
+                    this.phase = random(0, Math.PI * 2);
+                    this.speed = random(0.008, 0.025);
+                }
+                update(mx, my, active) {
+                    this.phase += this.speed;
+                    this.opacity = 0.2 + Math.abs(Math.sin(this.phase)) * 0.6;
+                    if (active) {
+                        const d = dist(this.x, this.y, mx, my);
+                        if (d < 180) {
+                            const f = (180 - d) / 180;
+                            const a = Math.atan2(my - this.y, mx - this.x);
+                            this.vx += Math.cos(a) * f * 0.08;
+                            this.vy += Math.sin(a) * f * 0.08;
+                            this.size = this.baseSize + f * 2;
+                        } else {
+                            this.size = this.baseSize;
+                        }
                     } else {
                         this.size = this.baseSize;
                     }
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vx *= 0.995;
+                    this.vy *= 0.995;
+                    if (this.x < 0) this.x = canvas.width;
+                    if (this.x > canvas.width) this.x = 0;
+                    if (this.y < 0) this.y = canvas.height;
+                    if (this.y > canvas.height) this.y = 0;
                 }
-
-                // 移动
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                // 速度衰减
-                this.speedX *= 0.99;
-                this.speedY *= 0.99;
-
-                // 边界处理：从另一边出现
-                if (this.x < 0) this.x = canvas.width;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.y < 0) this.y = canvas.height;
-                if (this.y > canvas.height) this.y = 0;
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
             }
 
-            // 绘制星星
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = this.color;
-
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        // ==================== 烟花粒子类 ====================
-
-        class FireworkParticle {
-            constructor(x, y, color) {
-                this.x = x;
-                this.y = y;
-                this.color = color;
-                const angle = random(0, Math.PI * 2);
-                const speed = random(2, 8);
-                this.speedX = Math.cos(angle) * speed;
-                this.speedY = Math.sin(angle) * speed;
-                this.size = random(2, 4);
-                this.opacity = 1;
-                this.decay = random(0.015, 0.03);
-                this.gravity = 0.1;
-            }
-
-            update() {
-                this.speedY += this.gravity;
-                this.x += this.speedX;
-                this.y += this.speedY;
-                this.speedX *= 0.98;
-                this.speedY *= 0.98;
-                this.opacity -= this.decay;
-                this.size *= 0.97;
+            class Particle {
+                constructor(x, y, color) {
+                    this.x = x; this.y = y; this.color = color;
+                    const a = random(0, Math.PI * 2);
+                    const s = random(2, 7);
+                    this.vx = Math.cos(a) * s;
+                    this.vy = Math.sin(a) * s;
+                    this.size = random(1.5, 3.5);
+                    this.opacity = 1;
+                    this.decay = random(0.012, 0.028);
+                }
+                update() {
+                    this.vy += 0.06;
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vx *= 0.98;
+                    this.vy *= 0.98;
+                    this.opacity -= this.decay;
+                    this.size *= 0.97;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = this.color;
+                    ctx.shadowBlur = 12;
+                    ctx.shadowColor = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+                get isDead() { return this.opacity <= 0; }
             }
 
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.opacity;
-                ctx.fillStyle = this.color;
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = this.color;
-
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+            function init() {
+                const count = Math.min(160, Math.floor((canvas.width * canvas.height) / 6000));
+                particles = [];
+                for (let i = 0; i < count; i++) particles.push(new Star());
             }
 
-            get isDead() {
-                return this.opacity <= 0;
-            }
-        }
-
-        // ==================== 初始化星星 ====================
-
-        function initStars() {
-            const count = Math.min(200, Math.floor((canvas.width * canvas.height) / 5000));
-            particles = [];
-            for (let i = 0; i < count; i++) {
-                particles.push(new Star());
-            }
-        }
-
-        // ==================== 动画循环 ====================
-
-        function animate() {
-            // 半透明黑色背景，制造拖尾效果
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // 更新和绘制星星
-            particles.forEach(star => {
-                star.update();
-                star.draw();
+            let mouseX = 0, mouseY = 0, mouseActive = false;
+            canvas.addEventListener('mousemove', e => {
+                const rect = canvas.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+                mouseActive = true;
+            });
+            canvas.addEventListener('mouseleave', () => { mouseActive = false; });
+            canvas.addEventListener('click', e => {
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const c = randomColor();
+                for (let i = 0; i < 40; i++) fireworks.push(new Particle(x, y, c));
             });
 
-            // 更新和绘制烟花粒子
-            fireworks.forEach((fw, index) => {
-                fw.update();
-                fw.draw();
-                if (fw.isDead) {
-                    fireworks.splice(index, 1);
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => { p.update(mouseX, mouseY, mouseActive); p.draw(); });
+                fireworks.forEach((f, i) => { f.update(); f.draw(); if (f.isDead) fireworks.splice(i, 1); });
+                requestAnimationFrame(animate);
+            }
+
+            init();
+            animate();
+            window.addEventListener('resize', init);
+        })();
+
+        // ---- Navbar scroll effect ----
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ---- Active nav link on scroll ----
+        const sections = document.querySelectorAll('.section, .hero');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(s => {
+                const top = s.offsetTop - 100;
+                if (window.scrollY >= top) current = s.id;
+            });
+            navLinks.forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+            });
+        });
+
+        // ---- Fade-in animation on scroll ----
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
             });
+        }, { threshold: 0.15 });
 
-            requestAnimationFrame(animate);
-        }
-
-        // ==================== 事件监听 ====================
-
-        // 鼠标移动
-        canvas.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-            mouse.isActive = true;
-        });
-
-        // 鼠标离开
-        canvas.addEventListener('mouseleave', () => {
-            mouse.isActive = false;
-        });
-
-        // 鼠标点击：产生烟花
-        canvas.addEventListener('click', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-            const color = randomColor();
-            const particleCount = 50;
-
-            for (let i = 0; i < particleCount; i++) {
-                fireworks.push(new FireworkParticle(x, y, color));
-            }
-        });
-
-        // 窗口大小改变时重置
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initStars();
-        });
-
-        // ==================== 启动 ====================
-        initStars();
-        animate();
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     </script>
+
 </body>
 </html>
