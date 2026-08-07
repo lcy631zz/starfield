@@ -58,7 +58,8 @@
         .hero-sub{font-size:1.15rem;color:var(--text2);max-width:520px;margin:0 auto 36px;font-weight:300;line-height:1.8}
         .hero-cta{display:inline-flex;align-items:center;gap:8px;padding:14px 36px;background:linear-gradient(135deg,var(--red),var(--red-accent));color:#fff;text-decoration:none;border-radius:100px;font-weight:500;font-size:1rem;transition:var(--ease);box-shadow:0 4px 20px rgba(212,52,47,.3)}
         .hero-cta:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(212,52,47,.4)}
-        .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:.8rem;animation:float 2s ease-in-out infinite}
+        .scroll-hint{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:.8rem;animation:float 2s ease-in-out infinite;opacity:1;transition:opacity .5s}
+        .scroll-hint.hide{opacity:0;pointer-events:none}
         .scroll-hint .arrow{width:24px;height:24px;border-right:2px solid var(--text3);border-bottom:2px solid var(--text3);transform:rotate(45deg)}
         @keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 
@@ -227,14 +228,15 @@
 
         .admin-fab {
             position:fixed;bottom:24px;right:24px;z-index:999;
-            width:48px;height:48px;border-radius:50%;
-            background:var(--text);color:var(--white);border:none;
-            font-size:1.3rem;cursor:pointer;
-            box-shadow:var(--sh-m);transition:var(--ease);
+            width:44px;height:44px;border-radius:50%;
+            background:var(--text);color:rgba(255,255,255,.25);border:none;
+            font-size:1.1rem;cursor:pointer;
+            box-shadow:var(--sh-s);transition:var(--ease);
             display:flex;align-items:center;justify-content:center;
+            opacity:.3;
         }
-        .admin-fab:hover{transform:scale(1.1)}
-        body.admin .admin-fab{background:var(--red)}
+        .admin-fab:hover{opacity:.7;transform:scale(1.1)}
+        body.admin .admin-fab{background:var(--red);color:#fff;opacity:.9}
 
         .admin-bar {
             position:fixed;top:64px;left:0;right:0;z-index:999;
@@ -297,6 +299,16 @@
         .btn-p:hover{background:var(--red-dark)}
         .btn-s{padding:10px 24px;background:var(--light);color:var(--text2);border:none;border-radius:100px;cursor:pointer;font-size:.9rem;transition:var(--ease);font-family:var(--sans)}
         .btn-s:hover{background:var(--warm)}
+
+        .file-upload {
+            display:inline-flex;align-items:center;gap:6px;
+            padding:8px 16px;border:1px dashed var(--red);
+            background:var(--red-light);color:var(--red);
+            border-radius:var(--r-s);cursor:pointer;
+            font-size:.85rem;transition:var(--ease);font-family:var(--sans);
+        }
+        .file-upload:hover{background:var(--red);color:#fff}
+        .file-name{font-size:.8rem;color:var(--text3);margin-left:8px}
     </style>
 </head>
 <body>
@@ -401,8 +413,11 @@
 <!-- Footer -->
 <footer class="footer"><p id="footer">用 ❤ 与代码构建 · 2026</p></footer>
 
-<!-- Admin FAB -->
-<button class="admin-fab" id="adminFab" onclick="showAdminLogin()" title="管理员">🔒</button>
+<!-- Admin FAB (hidden from regular visitors) -->
+<button class="admin-fab" id="adminFab" onclick="toggleAdmin()" title="">⚏</button>
+
+<!-- Hidden file input for uploads -->
+<input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
 
 <!-- Admin Bar -->
 <div class="admin-bar" id="adminBar">
@@ -664,11 +679,46 @@ document.querySelectorAll('.fi').forEach(el=>{const o=new IntersectionObserver(e
    ============================================= */
 loadContent();
 loadLocalData();
+autoAdminLogin();
+
+// Hide scroll hint after scrolling past hero
+window.addEventListener('scroll', () => {
+    const hint = document.querySelector('.scroll-hint');
+    if (hint) hint.classList.toggle('hide', window.scrollY > 200);
+}, {passive: true});
 
 /* =============================================
    Admin Mode
    ============================================= */
 let isAdmin = false, editIdx = -1, editSec = '';
+let clickTimer = null, clickCount = 0;
+
+// ---- Triple-click logo to toggle admin ----
+document.querySelector('.logo').addEventListener('click', (e) => {
+    e.preventDefault();
+    clickCount++;
+    if (clickCount === 1) {
+        clickTimer = setTimeout(() => { clickCount = 0; }, 500);
+    } else if (clickCount >= 3) {
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        toggleAdmin();
+    }
+});
+
+function toggleAdmin() {
+    if (isAdmin) { adminLogout(); return; }
+    showAdminLogin();
+}
+
+// Auto-login if password was saved in this browser
+function autoAdminLogin() {
+    const saved = localStorage.getItem('_sf_pwd');
+    if (saved) {
+        isAdmin = true;
+        document.body.classList.add('admin');
+    }
+}
 
 async function hashStr(s) {
     const buf = new TextEncoder().encode(s);
@@ -677,10 +727,9 @@ async function hashStr(s) {
 }
 
 function showAdminLogin() {
-    if (isAdmin) { adminLogout(); return; }
     const existing = localStorage.getItem('_sf_pwd');
-    document.getElementById('loginModalTitle').textContent = existing ? '🔒 管理员验证' : '🔒 设置管理密码';
-    document.getElementById('loginModalSub').textContent = existing ? '请输入密码以管理内容' : '首次使用请设置一个密码（仅保存在你的浏览器中）';
+    document.getElementById('loginModalTitle').textContent = existing ? '🔒 验证' : '🔒 设置密码';
+    document.getElementById('loginModalSub').textContent = existing ? '请输入管理密码' : '首次使用请设置密码（仅保存在当前浏览器）';
     document.getElementById('adminPwd').value = '';
     document.getElementById('loginErr').style.display = 'none';
     document.getElementById('loginModal').classList.add('show');
@@ -711,11 +760,90 @@ async function adminLogin() {
 function adminLogout() {
     isAdmin = false;
     document.body.classList.remove('admin');
-    localStorage.removeItem('_sf_pwd_auth');
     render();
 }
 
 function closeLogin() { document.getElementById('loginModal').classList.remove('show'); }
+
+// ---- File Upload & Paste ----
+let uploadTarget = null; // { section: 'yin'|'xing', field: 'img' }
+
+function triggerUpload(targetSec, targetField) {
+    uploadTarget = { section: targetSec, field: targetField };
+    document.getElementById('fileInput').click();
+}
+
+async function handleFileSelect(e) {
+    const file = e.target.files[0];
+    if (!file || !uploadTarget) return;
+    try {
+        const dataUrl = await readFileAsBase64(file, uploadTarget.section === 'xing' ? 1600 : 1200);
+        const inputId = uploadTarget.section === 'yin' ? 'ieImg' : 'ieImg';
+        document.getElementById(inputId).value = dataUrl;
+        // Show filename
+        const nameEl = document.getElementById('uploadFileName');
+        if (nameEl) nameEl.textContent = '✓ ' + file.name;
+    } catch(err) {
+        alert('图片处理失败：' + err.message);
+    }
+    e.target.value = '';
+}
+
+function readFileAsBase64(file, maxDim) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const img = new Image();
+            img.onload = () => {
+                if (img.width <= maxDim && img.height <= maxDim && file.size < 500000) {
+                    resolve(reader.result); // no resize needed
+                } else {
+                    resolve(resizeImage(img, maxDim));
+                }
+            };
+            img.onerror = () => reject(new Error('无法读取图片'));
+            img.src = reader.result;
+        };
+        reader.onerror = () => reject(new Error('文件读取失败'));
+        reader.readAsDataURL(file);
+    });
+}
+
+function resizeImage(img, maxDim) {
+    const canvas = document.createElement('canvas');
+    let w = img.width, h = img.height;
+    if (w > h && w > maxDim) { h = h * maxDim / w; w = maxDim; }
+    else if (h > maxDim) { w = w * maxDim / h; h = maxDim; }
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas.toDataURL('image/jpeg', 0.85);
+}
+
+// Paste support (Ctrl+V)
+document.addEventListener('paste', (e) => {
+    if (!isAdmin) return;
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+        if (item.type.startsWith('image/')) {
+            e.preventDefault();
+            const file = item.getAsFile();
+            readFileAsBase64(file, 1600).then(dataUrl => {
+                const active = document.querySelector('.modal-overlay2.show');
+                if (active) {
+                    const imgInput = active.querySelector('input[id*="Img"]');
+                    if (imgInput) {
+                        imgInput.value = dataUrl;
+                        const nameEl = active.querySelector('.file-name');
+                        if (nameEl) nameEl.textContent = '✓ 粘贴的图片';
+                    }
+                }
+            }).catch(() => alert('粘贴的图片处理失败'));
+            break;
+        }
+    }
+});
 
 // ---- Article Editor ----
 function editArticle(i) {
@@ -772,21 +900,54 @@ function editItem(sec, i) { editIdx = i; editSec = sec; openItemForm(sec, DATA[l
 function openItemForm(sec, item) {
     const titles = { yin: '添加照片', xing: '添加影像', projects: '添加项目' };
     document.getElementById('ieTitle').textContent = editIdx >= 0 ? '编辑' : (titles[sec] || '添加');
-    let html = '';
+    const imgId = 'ieImg';
     if (sec === 'yin') {
-        html = `<div class="fg"><label>图片链接</label><input id="ieImg" value="${escHtml(item.img||'')}"><div class="fg"><label>描述</label><input id="ieCap" value="${escHtml(item.caption||'')}"></div>`;
+        document.getElementById('ieFields').innerHTML = `
+            <div class="fg">
+                <label>图片</label>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <span class="file-upload" onclick="triggerUpload('yin','img')">📁 选择文件</span>
+                    <span class="file-name" id="uploadFileName">${item.img ? '✓ 已选择' : '支持粘贴截图 Ctrl+V'}</span>
+                </div>
+                <input type="hidden" id="${imgId}" value="${escHtml(item.img||'')}">
+                ${item.img ? `<img src="${escHtml(item.img)}" style="max-width:200px;max-height:150px;border-radius:8px;margin-top:8px;border:1px solid var(--light)">` : ''}
+            </div>
+            <div class="fg"><label>描述</label><input id="ieCap" value="${escHtml(item.caption||'')}"></div>`;
     } else if (sec === 'xing') {
-        html = `<div class="fg"><label>图片链接</label><input id="ieImg" value="${escHtml(item.img||'')}"><div class="fg"><label>地点</label><input id="iePlace" value="${escHtml(item.place||'')}"><div class="fg"><label>描述</label><input id="ieCap" value="${escHtml(item.caption||'')}"></div>`;
+        document.getElementById('ieFields').innerHTML = `
+            <div class="fg">
+                <label>图片</label>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <span class="file-upload" onclick="triggerUpload('xing','img')">📁 选择文件</span>
+                    <span class="file-name" id="uploadFileName">${item.img ? '✓ 已选择' : '支持粘贴截图 Ctrl+V'}</span>
+                </div>
+                <input type="hidden" id="${imgId}" value="${escHtml(item.img||'')}">
+                ${item.img ? `<img src="${escHtml(item.img)}" style="max-width:200px;max-height:150px;border-radius:8px;margin-top:8px;border:1px solid var(--light)">` : ''}
+            </div>
+            <div class="fg"><label>地点</label><input id="iePlace" value="${escHtml(item.place||'')}"></div>
+            <div class="fg"><label>描述</label><input id="ieCap" value="${escHtml(item.caption||'')}"></div>`;
     } else if (sec === 'projects') {
-        html = `<div class="fg"><label>图标 emoji</label><input id="ieIcon" value="${escHtml(item.icon||'')}"><div class="fg"><label>标题</label><input id="ieTi2" value="${escHtml(item.title||'')}"><div class="fg"><label>描述</label><textarea id="ieDesc" style="min-height:80px">${escHtml(item.desc||'')}</textarea></div><div class="fg"><label>标签（逗号分隔）</label><input id="ieTags" value="${(item.tags||[]).join(', ')}"><div class="fg"><label>链接</label><input id="ieLink" value="${escHtml(item.link||'')}"></div>`;
+        document.getElementById('ieFields').innerHTML = `
+            <div class="fg">
+                <label>图标</label>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <span class="file-upload" onclick="triggerUpload('projects','icon')">📁 选择图标</span>
+                    <span class="file-name" id="uploadFileName">${item.icon && item.icon.startsWith('data:') ? '✓ 已选择' : '或输入 emoji'}</span>
+                </div>
+                <input type="hidden" id="ieIcon" value="${escHtml(item.icon||'')}" placeholder="如 🌐 或上传图片">
+                ${item.icon && item.icon.startsWith('data:') ? `<img src="${escHtml(item.icon)}" style="width:48px;height:48px;border-radius:8px;margin-top:8px;border:1px solid var(--light);object-fit:cover">` : ''}
+            </div>
+            <div class="fg"><label>标题</label><input id="ieTi2" value="${escHtml(item.title||'')}"></div>
+            <div class="fg"><label>描述</label><textarea id="ieDesc" style="min-height:80px">${escHtml(item.desc||'')}</textarea></div>
+            <div class="fg"><label>标签（逗号分隔）</label><input id="ieTags" value="${(item.tags||[]).join(', ')}"></div>
+            <div class="fg"><label>链接</label><input id="ieLink" value="${escHtml(item.link||'')}"></div>`;
     }
-    document.getElementById('ieFields').innerHTML = html;
     document.getElementById('itemEditor').classList.add('show');
 }
 
 function saveItem() {
     const obj = {};
-    const get = id => document.getElementById(id).value;
+    const get = id => document.getElementById(id)?.value || '';
     if (editSec === 'yin') {
         obj.img = get('ieImg'); obj.caption = get('ieCap');
     } else if (editSec === 'xing') {
@@ -849,7 +1010,6 @@ function addAdminBtns() {
     document.querySelectorAll('.admin-item-bar, .add-btn-sec').forEach(e => e.remove());
     if (!isAdmin) return;
 
-    // Articles
     document.querySelectorAll('#artGrid .article-card').forEach((el, i) => {
         const bar = document.createElement('div');
         bar.className = 'admin-item-bar editable';
@@ -858,7 +1018,6 @@ function addAdminBtns() {
     });
     addSecBtn('artGrid', "addArticle()", '+ 添加文章');
 
-    // Yin
     document.querySelectorAll('#yinGrid .yin-item').forEach((el, i) => {
         const bar = document.createElement('div');
         bar.className = 'admin-item-bar editable';
@@ -867,7 +1026,6 @@ function addAdminBtns() {
     });
     addSecBtn('yinGrid', "addItem('yin')", '+ 添加照片');
 
-    // Xing
     document.querySelectorAll('#xingGrid .xing-item').forEach((el, i) => {
         const bar = document.createElement('div');
         bar.className = 'admin-item-bar editable';
@@ -876,7 +1034,6 @@ function addAdminBtns() {
     });
     addSecBtn('xingGrid', "addItem('xing')", '+ 添加影像');
 
-    // Projects
     document.querySelectorAll('#projList .project-item').forEach((el, i) => {
         const bar = document.createElement('div');
         bar.className = 'admin-item-bar editable';
