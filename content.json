@@ -1,0 +1,131 @@
+{
+  "zh-CN": {
+    "site_name": "空间",
+    "hero": {
+      "badge": "欢迎来到我的世界",
+      "title_1": "记录", "title_hl": "生活", "title_2": "与",
+      "title_3": "探索", "title_hl2": "技术", "title_4": "的旅程",
+      "subtitle": "这里是我在互联网上的一方小天地，记录着思考、创作与成长的点滴。",
+      "cta": "了解更多"
+    },
+    "about": {
+      "name": "无",
+      "role": "无",
+      "intro_title": "自我介绍",
+      "intro_text": "无",
+      "skills_title": "技能与工具",
+      "skills": [],
+      "info_title": "基本信息",
+      "info_text": "无"
+    },
+    "articles": {
+      "title": "文",
+      "desc": "记录技术探索、学习心得与生活中的思考。",
+      "items": []
+    },
+    "yin": {
+      "title": "荫",
+      "desc": "一方宁静的角落，种下思绪，收获平和。",
+      "quote": "无",
+      "quote_author": "无",
+      "items": []
+    },
+    "projects": {
+      "title": "项目",
+      "desc": "一些我投入时间和热情去做的事情。",
+      "items": []
+    },
+    "xing": {
+      "title": "行",
+      "desc": "走过的路，看过的风景，都在这里。",
+      "items": []
+    },
+    "footer": "用 ❤ 与代码构建 · 2026"
+  },
+  "zh-TW": {
+    "site_name": "空間",
+    "hero": {
+      "badge": "歡迎來到我的世界",
+      "title_1": "記錄", "title_hl": "生活", "title_2": "與",
+      "title_3": "探索", "title_hl2": "技術", "title_4": "的旅程",
+      "subtitle": "這裡是我在互聯網上的一方小天地，記錄著思考、創作與成長的點滴。",
+      "cta": "瞭解更多"
+    },
+    "about": {
+      "name": "無",
+      "role": "無",
+      "intro_title": "自我介紹",
+      "intro_text": "無",
+      "skills_title": "技能與工具",
+      "skills": [],
+      "info_title": "基本資訊",
+      "info_text": "無"
+    },
+    "articles": {
+      "title": "文",
+      "desc": "記錄技術探索、學習心得與生活中的思考。",
+      "items": []
+    },
+    "yin": {
+      "title": "蔭",
+      "desc": "一方寧靜的角落，種下思緒，收獲平和。",
+      "quote": "無",
+      "quote_author": "無",
+      "items": []
+    },
+    "projects": {
+      "title": "項目",
+      "desc": "一些我投入時間和熱情去做的事情。",
+      "items": []
+    },
+    "xing": {
+      "title": "行",
+      "desc": "走過的路，看過的風景，都在這裡。",
+      "items": []
+    },
+    "footer": "用 ❤ 與代碼構建 · 2026"
+  },
+  "en": {
+    "site_name": "Space",
+    "hero": {
+      "badge": "Welcome to My World",
+      "title_1": "Documenting ", "title_hl": "Life", "title_2": " & ",
+      "title_3": "Exploring ", "title_hl2": "Tech", "title_4": "",
+      "subtitle": "A small corner of the internet where I record thoughts, creations, and growth.",
+      "cta": "Learn More"
+    },
+    "about": {
+      "name": "N/A",
+      "role": "N/A",
+      "intro_title": "Introduction",
+      "intro_text": "N/A",
+      "skills_title": "Skills & Tools",
+      "skills": [],
+      "info_title": "Basic Info",
+      "info_text": "N/A"
+    },
+    "articles": {
+      "title": "Articles",
+      "desc": "Recording thoughts, stories, and reflections.",
+      "items": []
+    },
+    "yin": {
+      "title": "Sanctuary",
+      "desc": "A quiet corner for peace and inspiration.",
+      "quote": "N/A",
+      "quote_author": "N/A",
+      "items": []
+    },
+    "projects": {
+      "title": "Projects",
+      "desc": "Things I spend my time and passion on.",
+      "items": []
+    },
+    "xing": {
+      "title": "Travels",
+      "desc": "Places I've been, sights I've seen.",
+      "items": []
+    },
+    "footer": "Built with ❤ & Code · 2026"
+  }
+}
