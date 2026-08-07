@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内容编辑器 - 空间</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:#f0f2f5;color:#1a1a2e;line-height:1.6;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 24px 60px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.topbar h1{font-size:1.3rem;font-weight:700;color:#D4342F;display:flex;align-items:center;gap:8px}
+.topbar h1 span{font-size:1.5rem}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{padding:8px 18px;border:none;border-radius:8px;font-size:.88rem;font-weight:500;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.btn-primary{background:#D4342F;color:#fff}.btn-primary:hover{background:#B22F2A}
+.btn-success{background:#4CAF82;color:#fff}.btn-success:hover{background:#3D8B6E}
+.btn-outline{background:#fff;color:#5a5a72;border:1px solid #ddd}.btn-outline:hover{border-color:#D4342F;color:#D4342F}
+.btn-danger{background:#fff;color:#e74c3c;border:1px solid #fdd}.btn-danger:hover{background:#fef0ef;border-color:#e74c3c}
+.btn-warn{background:#FFF5EC;color:#E8780A;border:1px solid #fde0c8}.btn-warn:hover{background:#ffe8d5}
+.btn-sm{padding:5px 12px;font-size:.8rem;border-radius:6px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.lang-sel{display:flex;gap:2px;background:#f0f2f5;border-radius:8px;padding:3px}
+.lang-opt{padding:6px 14px;border:none;background:0 0;color:#8E8EA0;font-size:.82rem;font-weight:500;border-radius:6px;cursor:pointer;transition:.2s}
+.lang-opt.on{background:#fff;color:#D4342F;box-shadow:0 1px 3px rgba(0,0,0,.08);font-weight:600}
+.lang-opt:hover:not(.on){color:#5a5a72}
+
+.main{display:grid;grid-template-columns:220px 1fr;gap:20px}
+.sidebar{display:flex;flex-direction:column;gap:4px}
+.sb-item{padding:12px 16px;border-radius:8px;cursor:pointer;font-size:.9rem;font-weight:500;color:#5a5a72;transition:.2s;display:flex;align-items:center;gap:8px;border:none;background:0 0;width:100%;text-align:left;font-family:inherit}
+.sb-item:hover{background:rgba(212,52,47,.06);color:#D4342F}
+.sb-item.on{background:#fff;color:#D4342F;box-shadow:0 1px 3px rgba(0,0,0,.08);font-weight:600}
+.sb-icon{font-size:1.1rem;width:22px;text-align:center}
+
+.content{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;min-height:500px}
+.c-head{padding:20px 24px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.c-head h2{font-size:1.15rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.c-body{padding:24px}
+.items{display:flex;flex-direction:column;gap:12px}
+.item-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:8px;border:1px solid #f0f0f0;transition:.2s;flex-wrap:wrap}
+.item-row:hover{border-color:#ddd;background:#fafafa}
+.item-info{flex:1;min-width:150px}
+.item-info .it{font-weight:600;font-size:.92rem;color:#1a1a2e;margin-bottom:2px}
+.item-info .is{font-size:.8rem;color:#8E8EA0}
+.item-actions{display:flex;gap:6px;flex-shrink:0}
+.empty{text-align:center;padding:48px 24px;color:#8E8EA0}
+.empty .ei{font-size:2.5rem;margin-bottom:8px;opacity:.4}
+
+.form{margin-top:20px;padding:20px;background:#f8f9fa;border-radius:8px}
+.form h3{font-size:.95rem;font-weight:600;margin-bottom:14px;color:#D4342F}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:.82rem;font-weight:500;color:#5a5a72;margin-bottom:5px}
+.fg input,.fg textarea,.fg select{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:6px;font-size:.88rem;font-family:inherit;transition:.2s;background:#fff;color:#1a1a2e}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:0;border-color:#D4342F;box-shadow:0 0 0 3px rgba(212,52,47,.1)}
+.fg textarea{min-height:80px;resize:vertical;line-height:1.6}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f-acts{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:6px 14px;border:1px solid #eee;background:#fff;border-radius:6px;font-size:.82rem;cursor:pointer;transition:.2s;font-family:inherit}
+.tab:hover{border-color:#D4342F}.tab.on{background:#D4342F;color:#fff;border-color:#D4342F}
+
+.img-preview{max-width:120px;max-height:80px;border-radius:6px;border:1px solid #eee;margin-top:6px;object-fit:cover}
+.upload-zone{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:2px dashed #ddd;border-radius:8px;cursor:pointer;font-size:.82rem;color:#8E8EA0;transition:.2s;background:#fff}
+.upload-zone:hover{border-color:#D4342F;color:#D4342F;background:#FFF5EC}
+.upload-zone input{display:none}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{padding:3px 10px;background:#fff;border:1px solid #e74c3c;color:#e74c3c;border-radius:100px;font-size:.75rem;display:inline-flex;align-items:center;gap:4px}
+.tag .x{cursor:pointer;font-weight:700}.tag .x:hover{color:#c0392b}
+
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 24px;border-radius:10px;color:#fff;font-weight:500;z-index:3000;transform:translateY(100px);opacity:0;transition:.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{background:#4CAF82}.toast.err{background:#e74c3c}
+
+.info-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.info-card{flex:1;min-width:140px;padding:14px 18px;background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.05);font-size:.85rem}
+.info-card strong{display:block;font-size:1.4rem;color:#D4342F;margin-bottom:2px}
+.info-card span{color:#8E8EA0}
+
+@media(max-width:768px){
+    .wrap{padding:12px 12px 40px}
+    .main{grid-template-columns:1fr}
+    .sidebar{flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:4px}
+    .sb-item{white-space:nowrap;padding:10px 12px;font-size:.82rem;flex-shrink:0}
+    .fg-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+    <div class="topbar">
+        <h1><span>✿</span> 内容编辑器</h1>
+        <div class="actions">
+            <div class="lang-sel">
+                <button class="lang-opt on" onclick="switchLang('zh-CN',this)">简中</button>
+                <button class="lang-opt" onclick="switchLang('zh-TW',this)">繁體</button>
+                <button class="lang-opt" onclick="switchLang('en',this)">EN</button>
+            </div>
+            <button class="btn btn-outline" onclick="document.getElementById('fileIn').click()">📂 打开 content.json</button>
+            <input type="file" id="fileIn" accept=".json" style="display:none" onchange="openFile(this)">
+            <button class="btn btn-success" onclick="saveFile()">💾 保存 content.json</button>
+        </div>
+    </div>
+    <div class="info-bar" id="infoBar">
+        <div class="info-card"><strong id="iItems">0</strong><span>内容项</span></div>
+        <div class="info-card"><strong id="iArts">0</strong><span>文章</span></div>
+        <div class="info-card"><strong id="iYin">0</strong><span>图片</span></div>
+        <div class="info-card"><strong id="iProj">0</strong><span>项目</span></div>
+        <div class="info-card"><strong id="iXing">0</strong><span>旅行</span></div>
+    </div>
+    <div class="main">
+        <div class="sidebar" id="sidebar"></div>
+        <div class="content" id="content"></div>
+    </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+let DATA={zh-CN:{site_name:'空间',hero:{badge:'欢迎来到我的世界',title_1:'记录',title_hl:'生活',title_2:'与',title_3:'探索',title_hl2:'技术',title_4:'的旅程',subtitle:'这里是我在互联网上的一方小天地。',cta:'了解更多'},about:{name:'无',role:'无',intro_title:'自我介绍',intro_text:'无',skills_title:'技能与工具',skills:[],info_title:'基本信息',info_text:'无',avatar:''},articles:{title:'文',desc:'记录技术探索、学习心得与生活中的思考。',items:[]},yin:{title:'荫',desc:'一方宁静的角落，种下思绪，收获平和。',quote:'无',quote_author:'无',items:[]},projects:{title:'项目',desc:'一些我投入时间和热情去做的事情。',items:[]},xing:{title:'行',desc:'走过的路，看过的风景，都在这里。',items:[]},footer:'用 ❤ 与代码构建 · 2026'},zh-TW:{site_name:'空間',hero:{badge:'歡迎來到我的世界',title_1:'記錄',title_hl:'生活',title_2:'與',title_3:'探索',title_hl2:'技術',title_4:'的旅程',subtitle:'這裡是我在互聯網上的一方小天地。',cta:'瞭解更多'},about:{name:'無',role:'無',intro_title:'自我介紹',intro_text:'無',skills_title:'技能與工具',skills:[],info_title:'基本資訊',info_text:'無',avatar:''},articles:{title:'文',desc:'記錄技術探索、學習心得與生活中的思考。',items:[]},yin:{title:'蔭',desc:'一方寧靜的角落，種下思緒，收獲平和。',quote:'無',quote_author:'無',items:[]},projects:{title:'項目',desc:'一些我投入時間和熱情去做的事情。',items:[]},xing:{title:'行',desc:'走過的路，看過的風景，都在這裡。',items:[]},footer:'用 ❤ 與代碼構建 · 2026'},en:{site_name:'Space',hero:{badge:'Welcome to My World',title_1:'Documenting ',title_hl:'Life',title_2:' & ',title_3:'Exploring ',title_hl2:'Tech',title_4:'',subtitle:'A small corner of the internet.',cta:'Learn More'},about:{name:'N/A',role:'N/A',intro_title:'Introduction',intro_text:'N/A',skills_title:'Skills & Tools',skills:[],info_title:'Basic Info',info_text:'N/A',avatar:''},articles:{title:'Articles',desc:'Recording thoughts, stories, and reflections.',items:[]},yin:{title:'Sanctuary',desc:'A quiet corner for peace and inspiration.',quote:'N/A',quote_author:'N/A',items:[]},projects:{title:'Projects',desc:'Things I spend my time and passion on.',items:[]},xing:{title:'Travels',desc:'Places I\'ve been, sights I\'ve seen.',items:[]},footer:'Built with ❤ & Code · 2026'}};
+let curLang='zh-CN',curSec=null;
+
+const SECTIONS=[
+    {key:'about',icon:'👤',label:()=>DATA[curLang].about.name||'我',color:'#D4342F'},
+    {key:'articles',icon:'📝',label:()=>'文',color:'#D4342F'},
+    {key:'yin',icon:'🌿',label:()=>DATA[curLang].yin.title||'荫',color:'#4CAF82'},
+    {key:'projects',icon:'🛠️',label:()=>DATA[curLang].projects.title||'项目',color:'#D4342F'},
+    {key:'xing',icon:'🐴',label:()=>DATA[curLang].xing.title||'行',color:'#E8780A'}
+];
+
+function init(){renderSidebar();renderContent();updateStats()}
+
+function renderSidebar(){
+    const sb=document.getElementById('sidebar');
+    sb.innerHTML=SECTIONS.map((s,i)=>`<button class="sb-item${curSec===s.key?' on':''}" onclick="selectSec('${s.key}',${i})"><span class="sb-icon">${s.icon}</span><span>${s.label()}</span></button>`).join('');
+}
+
+function selectSec(key,idx){
+    curSec=key;curIdx=idx;renderSidebar();renderContent();
+}
+
+function switchLang(l,btn){
+    curLang=l;
+    document.querySelectorAll('.lang-opt').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    renderSidebar();renderContent();updateStats();
+}
+
+function updateStats(){
+    const d=DATA[curLang];
+    document.getElementById('iItems').textContent=(d.articles.items?.length||0)+(d.yin.items?.length||0)+(d.projects.items?.length||0)+(d.xing.items?.length||0);
+    document.getElementById('iArts').textContent=d.articles.items?.length||0;
+    document.getElementById('iYin').textContent=d.yin.items?.length||0;
+    document.getElementById('iProj').textContent=d.projects.items?.length||0;
+    document.getElementById('iXing').textContent=d.xing.items?.length||0;
+}
+
+function renderContent(){
+    const c=document.getElementById('content');
+    if(!curSec){c.innerHTML='<div class="c-body"><div class="empty"><div class="ei">👈</div>请选择一个版块</div></div>';return}
+    const s=SECTIONS.find(s=>s.key===curSec);
+    let h=`<div class="c-head"><h2><span>${s.icon}</span> ${s.label()}</h2><button class="btn btn-primary btn-sm" onclick="addItem()">+ 添加</button></div><div class="c-body">`;
+    if(curSec==='about'){
+        h+=renderAboutForm();h+=`</div>`;c.innerHTML=h;return;
+    }
+    const items=getItems();
+    if(!items.length){
+        const na=curLang==='en'?'N/A':'无';
+        const ei={articles:'📝',yin:'🌿',projects:'🛠️',xing:'🐴'}[curSec];
+        h+=`<div class="empty"><div class="ei">${ei}</div>${na}</div>`;
+    }else{
+        h+=`<div class="items">`;
+        items.forEach((it,i)=>{
+            let title='',sub='';
+            switch(curSec){
+                case'articles':title=it.title||'(无标题)';sub=`${it.tag||''} ${it.date||''} ${it.readTime||''}`;break;
+                case'yin':title=it.caption||`图片 ${i+1}`;sub='🖼️ 图片';break;
+                case'projects':title=it.title||'(无标题)';sub=`${(it.tags||[]).join(', ')}`;break;
+                case'xing':title=it.caption||`${it.place||'未知地点'} ${i+1}`;sub=`📍 ${it.place||''}`;break;
+            }
+            h+=`<div class="item-row"><div class="item-info"><div class="it">${title}</div><div class="is">${sub}</div></div><div class="item-actions"><button class="btn btn-outline btn-sm" onclick="editItem(${i})">✏️</button><button class="btn btn-danger btn-sm" onclick="delItem(${i})">🗑️</button></div></div>`;
+        });
+        h+=`</div>`;
+    }
+    if(items.length){
+        h+=`<div class="form" id="editForm" style="display:none"></div>`;
+    }else{
+        h+=`<div class="form" id="editForm"></div>`;
+    }
+    h+=`</div>`;
+    c.innerHTML=h;
+}
+
+function renderAboutForm(){
+    const d=DATA[curLang].about;
+    let h=`<div class="form"><h3>个人信息</h3>
+    <div class="fg-row"><div class="fg"><label>姓名</label><input id="fName" value="${esc(d.name)}"></div><div class="fg"><label>身份 / 职业</label><input id="fRole" value="${esc(d.role)}"></div></div>
+    <div class="fg"><label>${d.intro_title}</label><textarea id="fIntro">${esc(d.intro_text)}</textarea></div>
+    <div class="fg"><label>头像 (粘贴 base64 或点击上传)</label>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <label class="upload-zone"><input type="file" accept="image/*" onchange="uploadAvatar(this)">📷 选择图片</label>
+            <span style="font-size:.8rem;color:#8E8EA0">或直接 Ctrl+V 粘贴图片到下方</span>
+        </div>
+        <img id="avatarPrev" class="img-preview" style="max-width:100px;max-height:100px;display:${d.avatar?'block':'none'}" src="${d.avatar||''}">
+        <input type="hidden" id="fAvatar" value="${d.avatar||''}">
+    </div>
+    <div class="fg"><label>${d.skills_title}（逗号分隔）</label><input id="fSkills" value="${esc(d.skills.join(', '))}" placeholder="例如：JavaScript, Python, 摄影"></div>
+    <div class="fg"><label>${d.info_title}</label><textarea id="fInfo">${esc(d.info_text)}</textarea></div>
+    <div class="f-acts"><button class="btn btn-primary" onclick="saveAbout()">💾 保存</button></div></div>`;
+    // Yin quote
+    h+=`<div class="form"><h3>荫 - 格言</h3>
+    <div class="fg"><label>格言内容</label><input id="fQuote" value="${esc(d.yin?.quote||DATA[curLang].yin.quote||'')}"></div>
+    <div class="fg"><label>格言作者</label><input id="fQuoteA" value="${esc(d.yin?.quote_author||DATA[curLang].yin.quote_author||'')}"></div>
+    <div class="f-acts"><button class="btn btn-primary" onclick="saveQuote()">💾 保存</button></div></div>`;
+    // Hero
+    const hr=DATA[curLang].hero;
+    h+=`<div class="form"><h3>主页横幅</h3>
+    <div class="fg"><label>Badge 文字</label><input id="fBadge" value="${esc(hr.badge)}"></div>
+    <div class="fg-row"><div class="fg"><label>标题 - 第1段</label><input id="fT1" value="${esc(hr.title_1)}"></div><div class="fg"><label>标题 - 高亮1</label><input id="fTHL" value="${esc(hr.title_hl)}"></div></div>
+    <div class="fg-row"><div class="fg"><label>标题 - 第2段</label><input id="fT2" value="${esc(hr.title_2)}"></div><div class="fg"><label>标题 - 第3段</label><input id="fT3" value="${esc(hr.title_3)}"></div></div>
+    <div class="fg-row"><div class="fg"><label>标题 - 高亮2</label><input id="fTHL2" value="${esc(hr.title_hl2)}"></div><div class="fg"><label>标题 - 第4段</label><input id="fT4" value="${esc(hr.title_4)}"></div></div>
+    <div class="fg"><label>副标题</label><textarea id="fSub">${esc(hr.subtitle)}</textarea></div>
+    <div class="fg"><label>按钮文字</label><input id="fCta" value="${esc(hr.cta)}"></div>
+    <div class="f-acts"><button class="btn btn-primary" onclick="saveHero()">💾 保存</button></div></div>`;
+    // Footer
+    h+=`<div class="form"><h3>页脚</h3>
+    <div class="fg"><label>页脚文字</label><input id="fFooter" value="${esc(DATA[curLang].footer)}"></div>
+    <div class="f-acts"><button class="btn btn-primary" onclick="saveFooter()">💾 保存</button></div></div>`;
+    return h;
+}
+
+function getItems(){return DATA[curLang][curSec]?.items||[]}
+function setItems(arr){DATA[curLang][curSec].items=arr}
+
+function addItem(){curEditIdx=-1;showForm(emptyItem())}
+function editItem(i){curEditIdx=i;showForm(getItems()[i])}
+let curEditIdx=-1;
+
+function emptyItem(){
+    switch(curSec){
+        case'articles':return{title:'',tag:'',date:'',readTime:'',excerpt:'',content:''};
+        case'yin':return{img:'',caption:''};
+        case'projects':return{icon:'🌐',title:'',desc:'',tags:[],link:''};
+        case'xing':return{img:'',place:'',caption:''};
+        default:return{};
+    }
+}
+
+function showForm(it){
+    const f=document.getElementById('editForm');
+    if(!f)return;
+    let h=`<h3>${curEditIdx>=0?'编辑':'添加'} ${SECTIONS.find(s=>s.key===curSec)?.label()||''}</h3>`;
+    switch(curSec){
+        case'articles':
+            h+=`<div class="fg"><label>标题</label><input id="e0" value="${esc(it.title)}"></div>
+            <div class="fg-row"><div class="fg"><label>标签</label><input id="e1" value="${esc(it.tag)}"></div><div class="fg"><label>日期</label><input id="e2" type="date" value="${it.date||''}"></div></div>
+            <div class="fg-row"><div class="fg"><label>阅读时长</label><input id="e3" value="${esc(it.readTime)}"></div><div class="fg"><label>摘要</label><input id="e4" value="${esc(it.excerpt)}"></div></div>
+            <div class="fg"><label>正文内容</label><textarea id="e5" style="min-height:200px">${esc(it.content)}</textarea></div>`;
+            break;
+        case'yin':
+            h+=`<div class="fg"><label>图片 (base64 或点击上传)</label>
+                <label class="upload-zone"><input type="file" accept="image/*" onchange="uploadYin(this)">📷 选择图片</label>
+                <input id="e0" value="${esc(it.img)}" placeholder="粘贴 base64 或上传" style="margin-top:6px">
+                <img id="prev0" class="img-preview" style="display:${it.img?'block':'none'}" src="${it.img||''}">
+            </div>
+            <div class="fg"><label>说明文字</label><input id="e1" value="${esc(it.caption)}"></div>`;
+            break;
+        case'projects':
+            h+=`<div class="fg"><label>图标 (emoji 或 base64 图片)</label>
+                <input id="e0" value="${esc(it.icon)}" placeholder="🌐 或粘贴 base64 图片">
+                <img id="prev0" class="img-preview" style="display:${it.icon&&it.icon.startsWith('data')?'block':'none'}" src="${it.icon||''}">
+            </div>
+            <div class="fg"><label>项目名称</label><input id="e1" value="${esc(it.title)}"></div>
+            <div class="fg"><label>描述</label><textarea id="e2">${esc(it.desc)}</textarea></div>
+            <div class="fg"><label>标签 (回车添加)</label><input id="e3" value="${esc((it.tags||[]).join(', '))}" onkeydown="if(event.key==='Enter'){addTag(this.value);this.value=''}">
+                <div class="tag-row" id="tagRow">${(it.tags||[]).map((t,i)=>`<span class="tag">${esc(t)} <span class="x" onclick="rmTag(${i})">×</span></span>`).join('')}</div>
+                <input type="hidden" id="tags" value="${esc((it.tags||[]).join(','))}">
+            </div>
+            <div class="fg"><label>链接</label><input id="e4" value="${esc(it.link)}" placeholder="https://..."></div>`;
+            break;
+        case'xing':
+            h+=`<div class="fg"><label>图片 (base64 或点击上传)</label>
+                <label class="upload-zone"><input type="file" accept="image/*" onchange="uploadXing(this)">📷 选择图片</label>
+                <input id="e0" value="${esc(it.img)}" placeholder="粘贴 base64 或上传" style="margin-top:6px">
+                <img id="prev0" class="img-preview" style="display:${it.img?'block':'none'}" src="${it.img||''}">
+            </div>
+            <div class="fg-row"><div class="fg"><label>地点</label><input id="e1" value="${esc(it.place)}"></div><div class="fg"><label>说明</label><input id="e2" value="${esc(it.caption)}"></div></div>`;
+            break;
+    }
+    h+=`<div class="f-acts"><button class="btn btn-outline btn-sm" onclick="cancelEdit()">取消</button><button class="btn btn-primary" onclick="saveItem()">💾 保存</button></div>`;
+    f.innerHTML=h;f.style.display='block';
+    // image paste listener
+    const inputs=f.querySelectorAll('input[type=text]');
+    inputs.forEach(inp=>{
+        inp.addEventListener('paste',e=>{
+            const items=e.clipboardData?.items;
+            if(!items)return;
+            for(let it of items){if(it.type.startsWith('image/')){e.preventDefault();const file=it.getAsFile();const fIdx=Array.from(inputs).indexOf(inp);pasteImg(file,fIdx);}}
+        });
+    });
+    // tag display update
+    updateTagRow();
+}
+
+function pasteImg(file,idx){
+    const r=new FileReader();
+    r.onload=e=>{
+        const val='data:image/jpeg;base64,'+e.target.result.split(',')[1];
+        const inp=document.getElementById('e'+idx);
+        if(inp)inp.value=val;
+        const prev=document.getElementById('prev'+idx);
+        if(prev){prev.src=val;prev.style.display='block'}
+    };
+    r.readAsDataURL(file);
+}
+
+function uploadAvatar(inp){
+    if(!inp.files[0])return;
+    const r=new FileReader();
+    r.onload=e=>{
+        const b64='data:image/jpeg;base64,'+e.target.result.split(',')[1];
+        document.getElementById('fAvatar').value=b64;
+        const p=document.getElementById('avatarPrev');p.src=b64;p.style.display='block';
+    };r.readAsDataURL(inp.files[0]);
+}
+function uploadYin(inp){if(!inp.files[0])return;doUpload(inp.files[0],0,'e0','prev0')}
+function uploadXing(inp){if(!inp.files[0])return;doUpload(inp.files[0],0,'e0','prev0')}
+
+function doUpload(file,idx,inpId,prevId){
+    const r=new FileReader();
+    r.onload=e=>{
+        let b64=e.target.result;
+        if(!b64.startsWith('data:'))b64='data:image/jpeg;base64,'+b64;
+        const inp=document.getElementById(inpId);if(inp)inp.value=b64;
+        const prev=document.getElementById(prevId);if(prev){prev.src=b64;prev.style.display='block'}
+    };r.readAsDataURL(file);
+}
+
+function addTag(v){
+    const arr=getTags();if(v.trim()&&!arr.includes(v.trim())){arr.push(v.trim());document.getElementById('tags').value=arr.join(',');updateTagRow()}
+}
+function rmTag(i){const arr=getTags();arr.splice(i,1);document.getElementById('tags').value=arr.join(',');updateTagRow()}
+function getTags(){return document.getElementById('tags').value.split(',').filter(Boolean)}
+function updateTagRow(){
+    const r=document.getElementById('tagRow');if(!r)return;
+    const tags=getTags();
+    r.innerHTML=tags.map((t,i)=>`<span class="tag">${esc(t)} <span class="x" onclick="rmTag(${i})">×</span></span>`).join('');
+}
+
+function saveItem(){
+    const items=[...getItems()];
+    const obj=collectItem();
+    if(!obj)return;
+    if(curEditIdx>=0)items[curEditIdx]=obj;else items.push(obj);
+    setItems(items);updateStats();cancelEdit();showToast('已保存 ✓','ok');
+}
+function collectItem(){
+    switch(curSec){
+        case'articles':{const t=val('e0');if(!t)return alert('请输入标题');return{title:t,tag:val('e1'),date:val('e2'),readTime:val('e3'),excerpt:val('e4'),content:val('e5')}}
+        case'yin':{const img=val('e0');if(!img)return alert('请添加图片');return{img,caption:val('e1')}}
+        case'projects':{const t=val('e1');if(!t)return alert('请输入项目名称');return{icon:val('e0')||'🌐',title:t,desc:val('e2'),tags:getTags(),link:val('e4')}}
+        case'xing':{const img=val('e0');if(!img)return alert('请添加图片');return{img,place:val('e1'),caption:val('e2')}}
+        default:return{};
+    }
+}
+function delItem(i){
+    if(!confirm(`确定删除？`))return;
+    const items=getItems();items.splice(i,1);setItems(items);updateStats();renderContent();showToast('已删除','ok');
+}
+function cancelEdit(){const f=document.getElementById('editForm');if(f){f.style.display='none';f.innerHTML=''}curEditIdx=-1}
+
+function saveAbout(){
+    DATA[curLang].about.name=val('fName');DATA[curLang].about.role=val('fRole');
+    DATA[curLang].about.intro_text=val('fIntro');DATA[curLang].about.avatar=val('fAvatar');
+    DATA[curLang].about.skills=val('fSkills').split(',').map(s=>s.trim()).filter(Boolean);
+    DATA[curLang].about.info_text=val('fInfo');
+    renderSidebar();updateStats();showToast('个人信息已保存 ✓','ok');
+}
+function saveQuote(){
+    if(!DATA[curLang].yin)DATA[curLang].yin={};
+    DATA[curLang].yin.quote=val('fQuote');DATA[curLang].yin.quote_author=val('fQuoteA');
+    showToast('格言已保存 ✓','ok');
+}
+function saveHero(){
+    const h=DATA[curLang].hero;h.badge=val('fBadge');h.title_1=val('fT1');h.title_hl=val('fTHL');
+    h.title_2=val('fT2');h.title_3=val('fT3');h.title_hl2=val('fTHL2');h.title_4=val('fT4');
+    h.subtitle=val('fSub');h.cta=val('fCta');showToast('横幅已保存 ✓','ok');
+}
+function saveFooter(){DATA[curLang].footer=val('fFooter');showToast('页脚已保存 ✓','ok')}
+
+function val(id){const e=document.getElementById(id);return e?e.value.trim():''}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function openFile(inp){
+    const f=inp.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=e=>{
+        try{const d=JSON.parse(e.target.result);for(const l of['zh-CN','zh-TW','en']){if(!DATA[l])DATA[l]={};deepMerge(DATA[l],d[l]||{})}
+        showToast('已加载 ✓','ok');init();
+        // Auto-update hero & about if they're empty
+        Object.keys(DATA).forEach(l=>{
+            if(!DATA[l].hero.badge)deepMerge(DATA[l].hero,DATA['zh-CN'].hero);
+            if(!DATA[l].about.name)deepMerge(DATA[l].about,DATA['zh-CN'].about);
+            if(!DATA[l].footer)DATA[l].footer=DATA['zh-CN'].footer;
+            if(!DATA[l].articles)DATA[l].articles={...DATA['zh-CN'].articles,items:[]};
+            if(!DATA[l].yin)DATA[l].yin={...DATA['zh-CN'].yin,items:[]};
+            if(!DATA[l].projects)DATA[l].projects={...DATA['zh-CN'].projects,items:[]};
+            if(!DATA[l].xing)DATA[l].xing={...DATA['zh-CN'].xing,items:[]};
+        });
+    }catch(err){showToast('JSON 格式错误','err');console.error(err)}
+};
+function saveFile(){
+    const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='content.json';a.click();URL.revokeObjectURL(a.href);showToast('已下载 ✓','ok');
+}
+function deepMerge(target,source){
+    for(const k in source){if(source[k]&&typeof source[k]==='object'&&!Array.isArray(source[k])){if(!target[k])target[k]={};deepMerge(target[k],source[k])}else{target[k]=source[k]}}
+}
+function showToast(msg,type){
+    const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type;t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// Global paste for image inputs
+document.addEventListener('paste',e=>{
+    const ae=document.activeElement;
+    if(!ae||(ae.tagName!=='INPUT'&&ae.tagName!=='TEXTAREA'))return;
+    if(ae.type==='text'||ae.type==='search'||ae.type==='url'||ae.tagName==='TEXTAREA'){
+        const items=e.clipboardData?.items;if(!items)return;
+        for(let it of items){if(it.type.startsWith('image/')){e.preventDefault();const file=it.getAsFile();handlePasteImage(file);break;}}
+    }
+});
+function handlePasteImage(file){
+    const r=new FileReader();
+    r.onload=e=>{
+        let b64=e.target.result;
+        if(!b64.startsWith('data:'))b64='data:image/jpeg;base64,'+b64;
+        const ae=document.activeElement;
+        if(ae&&ae.tagName==='INPUT'&&ae.id?.startsWith('e')){
+            const idx=parseInt(ae.id.replace('e',''));
+            ae.value=b64;
+            const prev=document.getElementById('prev'+idx);
+            if(prev){prev.src=b64;prev.style.display='block'}
+        }
+        showToast('图片已粘贴 ✓','ok');
+    };r.readAsDataURL(file);
+}
+
+init();
+</script>
+</body>
+</html>

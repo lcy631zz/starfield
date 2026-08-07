@@ -6,37 +6,29 @@
     <title>空间</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&family=Noto+Sans+SC&family=Noto+Sans+TC&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet">
     <style>
-        /* ============================================
-           Variables
-           ============================================ */
         :root {
-            --red: #D4342F; --red-dark: #B22F2A; --red-light: #FFF0EF; --red-accent: #E85D57;
-            --orange: #E8780A; --orange-dark: #C56508; --orange-light: #FFF5EC; --orange-accent: #F0963B;
-            --green: #4CAF82; --green-dark: #3D8B6E; --green-light: #E8F5EE; --green-pale: #F0FAF5; --green-mint: #A8D5BA;
-            --text: #1A1A2E; --text2: #5A5A72; --text3: #8E8EA0;
-            --white: #FFF; --warm: #FAFAF8; --light: #F5F4F1;
-            --sh-s: 0 1px 3px rgba(0,0,0,.06);
-            --sh-m: 0 4px 16px rgba(0,0,0,.08);
-            --sh-l: 0 8px 32px rgba(0,0,0,.10);
-            --r-s: 8px; --r-m: 14px; --r-l: 20px;
-            --serif: 'Noto Serif SC','Noto Serif','Noto Sans TC',serif;
-            --sans: 'Noto Sans SC','Noto Sans TC','Microsoft YaHei',sans-serif;
-            --ease: .3s cubic-bezier(.4,0,.2,1);
+            --red:#D4342F;--red-dark:#B22F2A;--red-light:#FFF0EF;--red-accent:#E85D57;
+            --orange:#E8780A;--orange-dark:#C56508;--orange-light:#FFF5EC;--orange-accent:#F0963B;
+            --green:#4CAF82;--green-dark:#3D8B6E;--green-light:#E8F5EE;--green-pale:#F0FAF5;--green-mint:#A8D5BA;
+            --text:#1A1A2E;--text2:#5A5A72;--text3:#8E8EA0;
+            --white:#FFF;--warm:#FAFAF8;--light:#F5F4F1;
+            --sh-s:0 1px 3px rgba(0,0,0,.06);--sh-m:0 4px 16px rgba(0,0,0,.08);--sh-l:0 8px 32px rgba(0,0,0,.10);
+            --r-s:8px;--r-m:14px;--r-l:20px;
+            --serif:'Noto Serif SC','Noto Serif','Noto Sans TC',serif;
+            --sans:'Noto Sans SC','Noto Sans TC','Microsoft YaHei',sans-serif;
+            --ease:.3s cubic-bezier(.4,0,.2,1);
         }
         *{margin:0;padding:0;box-sizing:border-box}
         html{scroll-behavior:smooth;font-size:16px}
         body{font-family:var(--sans);color:var(--text);background:var(--white);line-height:1.7;-webkit-font-smoothing:antialiased}
 
-        /* ============================================
-           Navbar
-           ============================================ */
         .navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.06);transition:var(--ease)}
         .navbar.scrolled{box-shadow:var(--sh-s)}
         .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px}
         .nav-left{display:flex;align-items:center;gap:24px}
-        .logo{font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--red);text-decoration:none;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+        .logo{font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--red);text-decoration:none;letter-spacing:1px;display:flex;align-items:center;gap:8px;cursor:pointer}
         .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--red),var(--red-accent));border-radius:var(--r-s);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem}
         .lang-sw{display:flex;gap:2px;background:var(--light);border-radius:100px;padding:3px}
         .lang-btn{padding:5px 12px;border:none;background:0 0;color:var(--text3);font-size:.78rem;font-weight:500;border-radius:100px;cursor:pointer;transition:var(--ease);font-family:var(--sans);white-space:nowrap}
@@ -46,9 +38,6 @@
         .nav-links a:hover{color:var(--red);background:var(--red-light)}
         .nav-links a.on{color:var(--red);background:var(--red-light);font-weight:600}
 
-        /* ============================================
-           Hero
-           ============================================ */
         .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:var(--white)}
         .hero-canvas{position:absolute;top:0;left:0;width:100%;height:100%;opacity:.35;pointer-events:none}
         .hero-content{text-align:center;position:relative;z-index:1;padding:40px 20px}
@@ -63,23 +52,14 @@
         .scroll-hint .arrow{width:24px;height:24px;border-right:2px solid var(--text3);border-bottom:2px solid var(--text3);transform:rotate(45deg)}
         @keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 
-        /* ============================================
-           Sections (common)
-           ============================================ */
         .section{padding:100px 24px;position:relative}
         .section-inner{max-width:1100px;margin:0 auto}
         .section-title{font-family:var(--serif);font-size:clamp(2rem,4vw,2.8rem);font-weight:700;margin-bottom:16px;line-height:1.3}
         .section-desc{color:var(--text2);font-size:1.05rem;max-width:600px;margin-bottom:48px;font-weight:300}
-        .divider{width:48px;height:3px;border-radius:3px;margin-bottom:20px}
-
-        /* section accent colors */
         .section-red .divider{background:var(--red)}.section-red .section-title{color:var(--red)}
         .section-green .divider{background:linear-gradient(90deg,var(--green),var(--green-mint))}.section-green .section-title{color:#2D5A42}.section-green .section-desc{color:#5A7D6A}
         .section-orange .divider{background:linear-gradient(90deg,var(--orange),var(--orange-accent))}.section-orange .section-title{color:#8B4A06}.section-orange .section-desc{color:#7A5C3E}
 
-        /* ============================================
-           我 (About)
-           ============================================ */
         .about-grid{display:grid;grid-template-columns:280px 1fr;gap:48px;align-items:start}
         .about-card{background:var(--white);border-radius:var(--r-l);padding:28px;text-align:center;box-shadow:var(--sh-m);border:1px solid rgba(0,0,0,.04);position:sticky;top:88px}
         .avatar{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);display:flex;align-items:center;justify-content:center;font-size:4rem;border:4px solid var(--white);box-shadow:0 0 0 3px var(--red),var(--sh-m);overflow:hidden}
@@ -97,9 +77,6 @@
         .skill-tag{padding:5px 14px;background:var(--light);border-radius:100px;font-size:.82rem;color:var(--text2);transition:var(--ease)}
         .skill-tag:hover{background:var(--red-light);color:var(--red)}
 
-        /* ============================================
-           文 (Articles)
-           ============================================ */
         #wen{background:var(--warm)}
         .article-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
         .article-card{background:var(--white);border-radius:var(--r-m);padding:28px;border:1px solid rgba(0,0,0,.04);transition:var(--ease);cursor:pointer;display:block}
@@ -110,9 +87,6 @@
         .article-card .card-excerpt{color:var(--text2);font-size:.9rem;line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
         .article-card .card-footer{margin-top:16px;padding-top:16px;border-top:1px solid var(--light);display:flex;align-items:center;justify-content:space-between;font-size:.82rem;color:var(--text3)}
 
-        /* ============================================
-           荫 (Green Gallery)
-           ============================================ */
         #yin{background:linear-gradient(180deg,#FFF 0%,var(--green-pale) 30%,#E8F5EE 100%);position:relative;overflow:hidden}
         #yin::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(76,175,130,.08),transparent 70%);border-radius:50%;pointer-events:none}
         #yin::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(168,213,186,.15),transparent 70%);border-radius:50%;pointer-events:none}
@@ -128,13 +102,11 @@
         .yin-quote blockquote{font-family:var(--serif);font-size:1.15rem;color:#3D6B52;font-style:italic;line-height:1.8;margin-bottom:12px}
         .yin-quote cite{color:var(--green-dark);font-size:.85rem;font-style:normal;font-weight:500}
 
-        /* ============================================
-           项目 (Projects)
-           ============================================ */
         .project-list{display:flex;flex-direction:column;gap:20px}
         .project-item{display:flex;align-items:center;gap:24px;padding:24px 28px;background:var(--white);border-radius:var(--r-m);border:1px solid rgba(0,0,0,.04);transition:var(--ease);text-decoration:none;color:inherit}
         .project-item:hover{box-shadow:var(--sh-m);border-color:rgba(212,52,47,.12);transform:translateX(4px)}
         .project-icon{width:48px;height:48px;border-radius:var(--r-s);background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+        .project-icon img{width:100%;height:100%;object-fit:cover;border-radius:var(--r-s)}
         .project-info{flex:1;min-width:0}
         .project-info h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin-bottom:4px}
         .project-info p{color:var(--text2);font-size:.88rem;line-height:1.6}
@@ -143,9 +115,6 @@
         .project-arrow{color:var(--text3);font-size:1.2rem;flex-shrink:0;transition:var(--ease)}
         .project-item:hover .project-arrow{color:var(--red);transform:translateX(4px)}
 
-        /* ============================================
-           行 (Orange Gallery)
-           ============================================ */
         #xing{background:linear-gradient(180deg,#FFF 0%,var(--orange-light) 30%,#FFE8D0 100%);position:relative;overflow:hidden}
         #xing::before{content:'';position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(232,120,10,.08),transparent 70%);border-radius:50%;pointer-events:none}
         #xing::after{content:'';position:absolute;bottom:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(240,150,59,.12),transparent 70%);border-radius:50%;pointer-events:none}
@@ -159,15 +128,9 @@
         .xing-item:hover .xing-caption{opacity:1}
         .xing-item .xing-place{position:absolute;top:12px;left:12px;padding:4px 10px;background:rgba(232,120,10,.85);color:#fff;border-radius:100px;font-size:.75rem;font-weight:500}
 
-        /* ============================================
-           Footer
-           ============================================ */
         .footer{padding:40px 24px;text-align:center;border-top:1px solid rgba(0,0,0,.06);color:var(--text3);font-size:.85rem}
         .footer .dot{color:var(--red)}
 
-        /* ============================================
-           Modals
-           ============================================ */
         .modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
         .modal-overlay.show{display:flex}
         .modal{background:var(--white);border-radius:var(--r-l);max-width:720px;width:100%;max-height:85vh;overflow-y:auto;position:relative;animation:modalIn .3s ease}
@@ -179,19 +142,14 @@
         .modal-header .meta{color:var(--text3);font-size:.85rem;display:flex;gap:16px;flex-wrap:wrap}
         .modal-body{padding:24px 32px 32px;font-size:1rem;line-height:2;color:var(--text2);white-space:pre-wrap}
 
-        /* Lightbox */
         .lightbox-img{max-width:90vw;max-height:85vh;border-radius:var(--r-m);box-shadow:0 20px 60px rgba(0,0,0,.4)}
         .lightbox-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:1.4rem;cursor:pointer;transition:var(--ease);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
         .lightbox-close:hover{background:rgba(255,255,255,.3)}
         .lightbox-caption{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#fff;font-size:.95rem;text-align:center;text-shadow:0 1px 4px rgba(0,0,0,.5);max-width:80vw}
 
-        /* Empty state */
         .empty{color:var(--text3);text-align:center;padding:48px 24px;font-size:.95rem;grid-column:1/-1}
         .empty .empty-icon{font-size:2.5rem;margin-bottom:12px;opacity:.5}
 
-        /* ============================================
-           Responsive
-           ============================================ */
         @media(max-width:768px){
             .nav-inner{flex-wrap:wrap;gap:8px;padding:8px 16px;height:auto}
             .nav-left{flex-wrap:wrap;gap:8px}
@@ -210,110 +168,14 @@
             .modal-header{padding:24px 20px 0}
             .modal-body{padding:16px 20px 24px}
         }
-        @media(max-width:480px){
-            .yin-grid{grid-template-columns:1fr}
-        }
+        @media(max-width:480px){.yin-grid{grid-template-columns:1fr}}
 
-        /* ============================================
-           Fade-in
-           ============================================ */
         .fi{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
         .fi.v{opacity:1;transform:translateY(0)}
-
-        /* ---- Admin Mode ---- */
-        body.admin .admin-only{display:block!important}
-        body.admin .admin-inline{display:inline!important}
-        .admin-only{display:none!important}
-        .admin-inline{display:none!important}
-
-        .admin-fab {
-            position:fixed;bottom:24px;right:24px;z-index:999;
-            width:44px;height:44px;border-radius:50%;
-            background:var(--text);color:rgba(255,255,255,.25);border:none;
-            font-size:1.1rem;cursor:pointer;
-            box-shadow:var(--sh-s);transition:var(--ease);
-            display:flex;align-items:center;justify-content:center;
-            opacity:.3;
-        }
-        .admin-fab:hover{opacity:.7;transform:scale(1.1)}
-        body.admin .admin-fab{background:var(--red);color:#fff;opacity:.9}
-
-        .admin-bar {
-            position:fixed;top:64px;left:0;right:0;z-index:999;
-            background:var(--text);color:var(--white);
-            padding:10px 24px;display:none;align-items:center;justify-content:space-between;
-            font-size:.85rem;
-        }
-        body.admin .admin-bar{display:flex}
-        .admin-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-        .admin-actions button {
-            padding:6px 14px;border:1px solid rgba(255,255,255,.3);
-            background:0 0;color:var(--white);border-radius:100px;
-            cursor:pointer;font-size:.8rem;transition:var(--ease);font-family:var(--sans);
-        }
-        .admin-actions button:hover{background:rgba(255,255,255,.15)}
-        .admin-actions .logout-btn{border-color:var(--red-accent);color:var(--red-accent)}
-
-        .edit-btn,.del-btn,.add-btn {
-            padding:4px 10px;border-radius:var(--r-s);cursor:pointer;
-            font-size:.75rem;transition:var(--ease);display:inline-flex;align-items:center;gap:4px;
-        }
-        .edit-btn{border:1px solid rgba(212,52,47,.2);background:var(--red-light);color:var(--red)}
-        .edit-btn:hover{background:var(--red);color:var(--white)}
-        .del-btn{border:1px solid rgba(220,53,69,.2);background:#FFF5F5;color:#DC3545}
-        .del-btn:hover{background:#DC3545;color:var(--white)}
-        .add-btn{margin:16px 0;border:1px dashed rgba(212,52,47,.3);background:transparent;color:var(--red)}
-        .add-btn:hover{background:var(--red-light)}
-
-        .admin-item-bar {
-            position:absolute;top:8px;right:8px;display:flex;gap:4px;z-index:2;
-            opacity:0;transition:var(--ease);pointer-events:none;
-        }
-        body.admin .editable .admin-item-bar{opacity:1;pointer-events:auto}
-        body.admin .editable{outline:1px dashed rgba(212,52,47,.2);outline-offset:2px}
-
-        /* Admin Modals */
-        .modal-overlay2 {
-            position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.5);
-            display:none;align-items:center;justify-content:center;padding:24px;
-        }
-        .modal-overlay2.show{display:flex}
-        .modal-box {
-            background:var(--white);border-radius:var(--r-l);padding:32px;
-            max-width:600px;width:100%;max-height:85vh;overflow-y:auto;
-            animation:modalIn .3s ease;
-        }
-        @keyframes modalIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-        .modal-box h3{font-family:var(--serif);font-size:1.3rem;margin-bottom:20px}
-        .fg{margin-bottom:16px}
-        .fg label{display:block;font-size:.85rem;font-weight:600;color:var(--text2);margin-bottom:6px}
-        .fg input,.fg textarea,.fg select {
-            width:100%;padding:10px 14px;border:1px solid var(--light);border-radius:var(--r-s);
-            font-family:var(--sans);font-size:.9rem;color:var(--text);background:var(--white);
-            transition:var(--ease);
-        }
-        .fg input:focus,.fg textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(212,52,47,.1)}
-        .fg textarea{min-height:120px;resize:vertical}
-        .f-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-        .btn-p{padding:10px 24px;background:var(--red);color:#fff;border:none;border-radius:100px;cursor:pointer;font-size:.9rem;font-weight:500;transition:var(--ease);font-family:var(--sans)}
-        .btn-p:hover{background:var(--red-dark)}
-        .btn-s{padding:10px 24px;background:var(--light);color:var(--text2);border:none;border-radius:100px;cursor:pointer;font-size:.9rem;transition:var(--ease);font-family:var(--sans)}
-        .btn-s:hover{background:var(--warm)}
-
-        .file-upload {
-            display:inline-flex;align-items:center;gap:6px;
-            padding:8px 16px;border:1px dashed var(--red);
-            background:var(--red-light);color:var(--red);
-            border-radius:var(--r-s);cursor:pointer;
-            font-size:.85rem;transition:var(--ease);font-family:var(--sans);
-        }
-        .file-upload:hover{background:var(--red);color:#fff}
-        .file-name{font-size:.8rem;color:var(--text3);margin-left:8px}
     </style>
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar" id="navbar">
     <div class="nav-inner">
         <div class="nav-left">
@@ -334,7 +196,6 @@
     </div>
 </nav>
 
-<!-- Hero -->
 <section class="hero" id="hero">
     <canvas class="hero-canvas" id="cv"></canvas>
     <div class="hero-content">
@@ -343,10 +204,9 @@
         <p class="hero-sub" id="hSub"></p>
         <a href="#wo" class="hero-cta"><span id="hCta"></span> <span>↓</span></a>
     </div>
-    <div class="scroll-hint"><span id="sHint">向下滚动</span><div class="arrow"></div></div>
+    <div class="scroll-hint" id="scrollHint"><span id="sHint">向下滚动</span><div class="arrow"></div></div>
 </section>
 
-<!-- 我 -->
 <section class="section section-red" id="wo">
     <div class="section-inner">
         <div class="divider"></div>
@@ -369,7 +229,6 @@
     </div>
 </section>
 
-<!-- 文 -->
 <section class="section section-red" id="wen">
     <div class="section-inner">
         <div class="divider"></div>
@@ -379,7 +238,6 @@
     </div>
 </section>
 
-<!-- 荫 -->
 <section class="section section-green" id="yin">
     <div class="section-inner">
         <div class="divider"></div>
@@ -390,7 +248,6 @@
     </div>
 </section>
 
-<!-- 项目 -->
 <section class="section section-red" id="xiangmu">
     <div class="section-inner">
         <div class="divider"></div>
@@ -400,7 +257,6 @@
     </div>
 </section>
 
-<!-- 行 -->
 <section class="section section-orange" id="xing">
     <div class="section-inner">
         <div class="divider"></div>
@@ -410,69 +266,8 @@
     </div>
 </section>
 
-<!-- Footer -->
 <footer class="footer"><p id="footer">用 ❤ 与代码构建 · 2026</p></footer>
 
-<!-- Admin FAB (hidden from regular visitors) -->
-<button class="admin-fab" id="adminFab" onclick="toggleAdmin()" title="">⚏</button>
-
-<!-- Hidden file input for uploads -->
-<input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
-
-<!-- Admin Bar -->
-<div class="admin-bar" id="adminBar">
-    <span>🛠️ 管理员模式</span>
-    <div class="admin-actions">
-        <button onclick="exportContent()">📥 导出 content.json</button>
-        <button onclick="saveToLocal()">💾 保存</button>
-        <button class="logout-btn" onclick="adminLogout()">退出</button>
-    </div>
-</div>
-
-<!-- Login Modal -->
-<div class="modal-overlay2" id="loginModal">
-    <div class="modal-box" style="max-width:400px;text-align:center">
-        <h3 id="loginModalTitle">🔒 设置管理密码</h3>
-        <p id="loginModalSub" style="color:var(--text2);font-size:.9rem;margin-bottom:16px">首次使用请设置一个密码，后续需输入此密码才能管理内容</p>
-        <div class="fg"><input type="password" id="adminPwd" placeholder="请输入密码" onkeydown="if(event.key==='Enter')adminLogin()"></div>
-        <div class="f-actions" style="justify-content:center">
-            <button class="btn-p" onclick="adminLogin()">进入管理</button>
-            <button class="btn-s" onclick="closeLogin()">取消</button>
-        </div>
-        <p id="loginErr" style="color:#DC3545;font-size:.85rem;margin-top:12px;display:none">密码不能为空</p>
-    </div>
-</div>
-
-<!-- Article Editor -->
-<div class="modal-overlay2" id="articleEditor">
-    <div class="modal-box">
-        <h3 id="aeTitle">编辑文章</h3>
-        <div class="fg"><label>标题</label><input id="aeTi"></div>
-        <div class="fg"><label>标签</label><input id="aeTag"></div>
-        <div class="fg"><label>日期</label><input type="date" id="aeDate"></div>
-        <div class="fg"><label>阅读时间</label><input id="aeRT" placeholder="如：5 分钟"></div>
-        <div class="fg"><label>摘要</label><input id="aeExc"></div>
-        <div class="fg"><label>正文</label><textarea id="aeBody" style="min-height:200px"></textarea></div>
-        <div class="f-actions">
-            <button class="btn-s" onclick="closeArtEdit()">取消</button>
-            <button class="btn-p" onclick="saveArticle()">保存</button>
-        </div>
-    </div>
-</div>
-
-<!-- Item Editor (yin/xing/projects) -->
-<div class="modal-overlay2" id="itemEditor">
-    <div class="modal-box">
-        <h3 id="ieTitle">添加</h3>
-        <div id="ieFields"></div>
-        <div class="f-actions">
-            <button class="btn-s" onclick="closeItemEdit()">取消</button>
-            <button class="btn-p" onclick="saveItem()">保存</button>
-        </div>
-    </div>
-</div>
-
-<!-- Article Modal -->
 <div class="modal-overlay" id="artModal">
     <div class="modal">
         <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -481,7 +276,6 @@
     </div>
 </div>
 
-<!-- Lightbox -->
 <div class="modal-overlay" id="lightbox" onclick="closeLightbox()">
     <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
     <img class="lightbox-img" id="lbImg" src="" alt="">
@@ -489,165 +283,144 @@
 </div>
 
 <script>
-/* =============================================
-   Content — loaded from content.json
-   ============================================= */
-let DATA = null;
-let lang = 'zh-CN';
+let DATA=null, lang='zh-CN';
 
-async function loadContent() {
-    try {
-        const r = await fetch('content.json?' + Date.now());
-        DATA = await r.json();
-    } catch(e) {
-        console.error('Failed to load content.json', e);
-        document.getElementById('artGrid').innerHTML = '<div class="empty"><div class="empty-icon">&#x1F4F0;</div>内容加载失败，请检查 content.json 文件</div>';
+async function loadContent(){
+    try{
+        const r=await fetch('content.json?'+Date.now());
+        DATA=await r.json();
+    }catch(e){
+        console.error('Failed to load content.json',e);
+        document.getElementById('artGrid').innerHTML='<div class="empty"><div class="empty-icon">📰</div>内容加载失败</div>';
         return;
     }
     render();
 }
 
-function t(k) { return DATA?.[lang]?.[k] ?? ''; }
-function na() { return lang === 'en' ? 'N/A' : '无'; }
+function t(k){return DATA?.[lang]?.[k]??''}
+function na(){return lang==='en'?'N/A':'无'}
 
-function render() {
-    if (!DATA) return;
-    const d = DATA[lang];
+function render(){
+    if(!DATA)return;
+    const d=DATA[lang];
+    document.getElementById('siteName').textContent=d.site_name;
+    document.getElementById('hBadge').textContent=d.hero.badge;
+    document.getElementById('hT1').textContent=d.hero.title_1;
+    document.getElementById('hTHL').textContent=d.hero.title_hl;
+    document.getElementById('hT2').textContent=d.hero.title_2;
+    document.getElementById('hT3').textContent=d.hero.title_3;
+    document.getElementById('hTHL2').textContent=d.hero.title_hl2;
+    document.getElementById('hT4').textContent=d.hero.title_4;
+    document.getElementById('hSub').textContent=d.hero.subtitle;
+    document.getElementById('hCta').textContent=d.hero.cta;
+    document.getElementById('sHint').textContent=lang==='en'?'Scroll Down':'向下滚动';
 
-    document.getElementById('siteName').textContent = d.site_name;
-    document.getElementById('hBadge').textContent = d.hero.badge;
-    document.getElementById('hT1').textContent = d.hero.title_1;
-    document.getElementById('hTHL').textContent = d.hero.title_hl;
-    document.getElementById('hT2').textContent = d.hero.title_2;
-    document.getElementById('hT3').textContent = d.hero.title_3;
-    document.getElementById('hTHL2').textContent = d.hero.title_hl2;
-    document.getElementById('hT4').textContent = d.hero.title_4;
-    document.getElementById('hSub').textContent = d.hero.subtitle;
-    document.getElementById('hCta').textContent = d.hero.cta;
-    document.getElementById('sHint').textContent = lang === 'en' ? 'Scroll Down' : '向下滚动';
+    document.getElementById('aName').textContent=d.about.name;
+    document.getElementById('aRole').textContent=d.about.role;
+    document.getElementById('aIntroTitle').textContent=d.about.intro_title;
+    document.getElementById('aIntro').textContent=d.about.intro_text;
+    document.getElementById('aSkillsTitle').textContent=d.about.skills_title;
+    document.getElementById('aInfoTitle').textContent=d.about.info_title;
+    document.getElementById('aInfo').textContent=d.about.info_text;
+    const sk=document.getElementById('skillTags');
+    sk.innerHTML=d.about.skills.length?d.about.skills.map(s=>`<span class="skill-tag">${s}</span>`).join(''):`<span style="color:var(--text3);font-size:.85rem">${na()}</span>`;
 
-    // About
-    document.getElementById('aName').textContent = d.about.name;
-    document.getElementById('aRole').textContent = d.about.role;
-    document.getElementById('aIntroTitle').textContent = d.about.intro_title;
-    document.getElementById('aIntro').textContent = d.about.intro_text;
-    document.getElementById('aSkillsTitle').textContent = d.about.skills_title;
-    document.getElementById('aInfoTitle').textContent = d.about.info_title;
-    document.getElementById('aInfo').textContent = d.about.info_text;
-    const sk = document.getElementById('skillTags');
-    sk.innerHTML = d.about.skills.length ? d.about.skills.map(s=>`<span class="skill-tag">${s}</span>`).join('') : `<span style="color:var(--text3);font-size:.85rem">${na()}</span>`;
+    // Avatar
+    const av=document.getElementById('avatarBox');
+    if(d.about.avatar){
+        av.innerHTML=`<img src="${d.about.avatar}" alt="">`;
+    }
 
-    // 文
-    document.getElementById('wDesc').textContent = d.articles.desc;
-    const ag = document.getElementById('artGrid');
-    if (d.articles.items.length) {
-        ag.innerHTML = d.articles.items.map((a,i)=>`
+    document.getElementById('wDesc').textContent=d.articles.desc;
+    const ag=document.getElementById('artGrid');
+    if(d.articles.items.length){
+        ag.innerHTML=d.articles.items.map((a,i)=>`
             <div class="article-card fi" onclick="openArticle(${i})">
                 <div class="card-meta"><span class="card-tag">${a.tag}</span><span>${a.date}</span></div>
                 <h3>${a.title}</h3>
-                <p class="card-excerpt">${a.excerpt || a.content.slice(0,120)+'…'}</p>
-                <div class="card-footer"><span>${a.readTime || ''}</span><span>${lang==='en'?'Read →':'阅读 →'}</span></div>
+                <p class="card-excerpt">${a.excerpt||a.content.slice(0,120)+'…'}</p>
+                <div class="card-footer"><span>${a.readTime||''}</span><span>${lang==='en'?'Read →':'阅读 →'}</span></div>
             </div>`).join('');
         requestAnimationFrame(()=>ag.querySelectorAll('.fi').forEach(el=>el.classList.add('v')));
-    } else {
-        ag.innerHTML = `<div class="empty"><div class="empty-icon">&#x1F4DD;</div>${na()}</div>`;
+    }else{
+        ag.innerHTML=`<div class="empty"><div class="empty-icon">📝</div>${na()}</div>`;
     }
 
-    // 荫
-    document.getElementById('yDesc').textContent = d.yin.desc;
-    document.getElementById('yQuote').textContent = d.yin.quote;
-    document.getElementById('yQuoteA').textContent = d.yin.quote_author;
-    const yg = document.getElementById('yinGrid');
-    if (d.yin.items.length) {
-        yg.innerHTML = d.yin.items.map(y=>`
+    document.getElementById('yDesc').textContent=d.yin.desc;
+    document.getElementById('yQuote').textContent=d.yin.quote;
+    document.getElementById('yQuoteA').textContent=d.yin.quote_author;
+    const yg=document.getElementById('yinGrid');
+    if(d.yin.items.length){
+        yg.innerHTML=d.yin.items.map(y=>`
             <div class="yin-item fi" onclick="openLightbox('${y.img}','${(y.caption||'').replace(/'/g,"\\'")}')">
                 <img src="${y.img}" alt="${y.caption||''}" loading="lazy">
                 ${y.caption?`<div class="yin-caption">${y.caption}</div>`:''}
             </div>`).join('');
         requestAnimationFrame(()=>yg.querySelectorAll('.fi').forEach(el=>el.classList.add('v')));
-    } else {
-        yg.innerHTML = `<div class="empty"><div class="empty-icon">&#x1F338;</div>${na()}</div>`;
+    }else{
+        yg.innerHTML=`<div class="empty"><div class="empty-icon">🌿</div>${na()}</div>`;
     }
 
-    // 项目
-    document.getElementById('pDesc').textContent = d.projects.desc;
-    const pl = document.getElementById('projList');
-    if (d.projects.items.length) {
-        pl.innerHTML = d.projects.items.map(p=>`
+    document.getElementById('pDesc').textContent=d.projects.desc;
+    const pl=document.getElementById('projList');
+    if(d.projects.items.length){
+        pl.innerHTML=d.projects.items.map(p=>`
             <a href="${p.link||'#'}" class="project-item fi">
-                <div class="project-icon">${p.icon}</div>
+                <div class="project-icon">${p.icon?`<img src="${p.icon}" alt="">':p.icon||''}</div>
                 <div class="project-info"><h3>${p.title}</h3><p>${p.desc}</p></div>
                 <div class="project-tags">${(p.tags||[]).map(t=>`<span class="project-tag">${t}</span>`).join('')}</div>
                 <span class="project-arrow">→</span>
             </a>`).join('');
         requestAnimationFrame(()=>pl.querySelectorAll('.fi').forEach(el=>el.classList.add('v')));
-    } else {
-        pl.innerHTML = `<div class="empty">${na()}</div>`;
+    }else{
+        pl.innerHTML=`<div class="empty">${na()}</div>`;
     }
 
-    // 行
-    document.getElementById('xDesc').textContent = d.xing.desc;
-    const xg = document.getElementById('xingGrid');
-    if (d.xing.items.length) {
-        xg.innerHTML = d.xing.items.map(x=>`
+    document.getElementById('xDesc').textContent=d.xing.desc;
+    const xg=document.getElementById('xingGrid');
+    if(d.xing.items.length){
+        xg.innerHTML=d.xing.items.map(x=>`
             <div class="xing-item fi" onclick="openLightbox('${x.img}','${(x.caption||'').replace(/'/g,"\\'")}')">
                 <img src="${x.img}" alt="${x.caption||''}" loading="lazy">
                 ${x.place?`<div class="xing-place">${x.place}</div>`:''}
                 ${x.caption?`<div class="xing-caption">${x.caption}</div>`:''}
             </div>`).join('');
         requestAnimationFrame(()=>xg.querySelectorAll('.fi').forEach(el=>el.classList.add('v')));
-    } else {
-        xg.innerHTML = `<div class="empty"><div class="empty-icon">&#x2708;&#xFE0F;</div>${na()}</div>`;
+    }else{
+        xg.innerHTML=`<div class="empty"><div class="empty-icon">🐴</div>${na()}</div>`;
     }
 
-    document.getElementById('footer').textContent = d.footer;
+    document.getElementById('footer').textContent=d.footer;
 }
 
-/* =============================================
-   Language
-   ============================================= */
-function setLang(l) {
-    lang = l;
+function setLang(l){
+    lang=l;
     document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));
-    document.documentElement.lang = l;
+    document.documentElement.lang=l;
     render();
 }
 
-/* =============================================
-   Article Modal
-   ============================================= */
-function openArticle(i) {
-    const a = DATA[lang].articles.items[i];
-    if (!a) return;
-    document.getElementById('mTitle').textContent = a.title;
-    document.getElementById('mMeta').innerHTML = `<span>${a.tag}</span><span>${a.date}</span><span>${a.readTime||''}</span>`;
-    document.getElementById('mBody').textContent = a.content;
+function openArticle(i){
+    const a=DATA[lang].articles.items[i];
+    if(!a)return;
+    document.getElementById('mTitle').textContent=a.title;
+    document.getElementById('mMeta').innerHTML=`<span>${a.tag}</span><span>${a.date}</span><span>${a.readTime||''}</span>`;
+    document.getElementById('mBody').textContent=a.content;
     document.getElementById('artModal').classList.add('show');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow='hidden';
 }
-function closeModal() {
-    document.getElementById('artModal').classList.remove('show');
-    document.body.style.overflow = '';
-}
+function closeModal(){document.getElementById('artModal').classList.remove('show');document.body.style.overflow=''}
 document.getElementById('artModal').addEventListener('click',e=>{if(e.target.id==='artModal')closeModal()});
 
-/* =============================================
-   Lightbox
-   ============================================= */
-function openLightbox(src, cap) {
-    document.getElementById('lbImg').src = src;
-    document.getElementById('lbCap').textContent = cap;
+function openLightbox(src,cap){
+    document.getElementById('lbImg').src=src;
+    document.getElementById('lbCap').textContent=cap;
     document.getElementById('lightbox').classList.add('show');
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow='hidden';
 }
-function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('show');
-    document.body.style.overflow = '';
-}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('show');document.body.style.overflow=''}
 
-/* =============================================
-   Starfield Canvas
-   ============================================= */
+// Starfield
 (function(){
     const cv=document.getElementById('cv'),cx=cv.getContext('2d'),P=[],F=[];
     function rs(){cv.width=cv.parentElement.offsetWidth;cv.height=cv.parentElement.offsetHeight}
@@ -666,402 +439,12 @@ function closeLightbox() {
     init();ani();window.addEventListener('resize',init);
 })();
 
-/* =============================================
-   Navbar
-   ============================================= */
-window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50)});
+window.addEventListener('scroll',()=>{document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);document.getElementById('scrollHint').classList.toggle('hide',window.scrollY>200)});
 const secs=document.querySelectorAll('.section,.hero'),nvs=document.querySelectorAll('.nav-links a');
 window.addEventListener('scroll',()=>{let c='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-100)c=s.id});nvs.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+c))});
 document.querySelectorAll('.fi').forEach(el=>{const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v')}),{threshold:.15});o.observe(el)});
 
-/* =============================================
-   Init
-   ============================================= */
 loadContent();
-loadLocalData();
-autoAdminLogin();
-
-// Hide scroll hint after scrolling past hero
-window.addEventListener('scroll', () => {
-    const hint = document.querySelector('.scroll-hint');
-    if (hint) hint.classList.toggle('hide', window.scrollY > 200);
-}, {passive: true});
-
-/* =============================================
-   Admin Mode
-   ============================================= */
-let isAdmin = false, editIdx = -1, editSec = '';
-let clickTimer = null, clickCount = 0;
-
-// ---- Triple-click logo to toggle admin ----
-document.querySelector('.logo').addEventListener('click', (e) => {
-    e.preventDefault();
-    clickCount++;
-    if (clickCount === 1) {
-        clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-    } else if (clickCount >= 3) {
-        clearTimeout(clickTimer);
-        clickCount = 0;
-        toggleAdmin();
-    }
-});
-
-function toggleAdmin() {
-    if (isAdmin) { adminLogout(); return; }
-    showAdminLogin();
-}
-
-// Auto-login if password was saved in this browser
-function autoAdminLogin() {
-    const saved = localStorage.getItem('_sf_pwd');
-    if (saved) {
-        isAdmin = true;
-        document.body.classList.add('admin');
-    }
-}
-
-async function hashStr(s) {
-    const buf = new TextEncoder().encode(s);
-    const h = await crypto.subtle.digest('SHA-256', buf);
-    return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-function showAdminLogin() {
-    const existing = localStorage.getItem('_sf_pwd');
-    document.getElementById('loginModalTitle').textContent = existing ? '🔒 验证' : '🔒 设置密码';
-    document.getElementById('loginModalSub').textContent = existing ? '请输入管理密码' : '首次使用请设置密码（仅保存在当前浏览器）';
-    document.getElementById('adminPwd').value = '';
-    document.getElementById('loginErr').style.display = 'none';
-    document.getElementById('loginModal').classList.add('show');
-    setTimeout(() => document.getElementById('adminPwd').focus(), 100);
-}
-
-async function adminLogin() {
-    const pwd = document.getElementById('adminPwd').value;
-    if (!pwd) return;
-    const hash = await hashStr(pwd);
-    const stored = localStorage.getItem('_sf_pwd');
-    if (!stored) {
-        localStorage.setItem('_sf_pwd', hash);
-        isAdmin = true;
-        document.body.classList.add('admin');
-        document.getElementById('loginModal').classList.remove('show');
-        render();
-    } else if (hash === stored) {
-        isAdmin = true;
-        document.body.classList.add('admin');
-        document.getElementById('loginModal').classList.remove('show');
-        render();
-    } else {
-        document.getElementById('loginErr').style.display = 'block';
-    }
-}
-
-function adminLogout() {
-    isAdmin = false;
-    document.body.classList.remove('admin');
-    render();
-}
-
-function closeLogin() { document.getElementById('loginModal').classList.remove('show'); }
-
-// ---- File Upload & Paste ----
-let uploadTarget = null; // { section: 'yin'|'xing', field: 'img' }
-
-function triggerUpload(targetSec, targetField) {
-    uploadTarget = { section: targetSec, field: targetField };
-    document.getElementById('fileInput').click();
-}
-
-async function handleFileSelect(e) {
-    const file = e.target.files[0];
-    if (!file || !uploadTarget) return;
-    try {
-        const dataUrl = await readFileAsBase64(file, uploadTarget.section === 'xing' ? 1600 : 1200);
-        const inputId = uploadTarget.section === 'yin' ? 'ieImg' : 'ieImg';
-        document.getElementById(inputId).value = dataUrl;
-        // Show filename
-        const nameEl = document.getElementById('uploadFileName');
-        if (nameEl) nameEl.textContent = '✓ ' + file.name;
-    } catch(err) {
-        alert('图片处理失败：' + err.message);
-    }
-    e.target.value = '';
-}
-
-function readFileAsBase64(file, maxDim) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const img = new Image();
-            img.onload = () => {
-                if (img.width <= maxDim && img.height <= maxDim && file.size < 500000) {
-                    resolve(reader.result); // no resize needed
-                } else {
-                    resolve(resizeImage(img, maxDim));
-                }
-            };
-            img.onerror = () => reject(new Error('无法读取图片'));
-            img.src = reader.result;
-        };
-        reader.onerror = () => reject(new Error('文件读取失败'));
-        reader.readAsDataURL(file);
-    });
-}
-
-function resizeImage(img, maxDim) {
-    const canvas = document.createElement('canvas');
-    let w = img.width, h = img.height;
-    if (w > h && w > maxDim) { h = h * maxDim / w; w = maxDim; }
-    else if (h > maxDim) { w = w * maxDim / h; h = maxDim; }
-    canvas.width = w; canvas.height = h;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, w, h);
-    return canvas.toDataURL('image/jpeg', 0.85);
-}
-
-// Paste support (Ctrl+V)
-document.addEventListener('paste', (e) => {
-    if (!isAdmin) return;
-    const items = e.clipboardData?.items;
-    if (!items) return;
-    for (const item of items) {
-        if (item.type.startsWith('image/')) {
-            e.preventDefault();
-            const file = item.getAsFile();
-            readFileAsBase64(file, 1600).then(dataUrl => {
-                const active = document.querySelector('.modal-overlay2.show');
-                if (active) {
-                    const imgInput = active.querySelector('input[id*="Img"]');
-                    if (imgInput) {
-                        imgInput.value = dataUrl;
-                        const nameEl = active.querySelector('.file-name');
-                        if (nameEl) nameEl.textContent = '✓ 粘贴的图片';
-                    }
-                }
-            }).catch(() => alert('粘贴的图片处理失败'));
-            break;
-        }
-    }
-});
-
-// ---- Article Editor ----
-function editArticle(i) {
-    editIdx = i; editSec = 'articles';
-    const a = DATA[lang].articles.items[i];
-    document.getElementById('aeTitle').textContent = '编辑文章';
-    document.getElementById('aeTi').value = a.title;
-    document.getElementById('aeTag').value = a.tag;
-    document.getElementById('aeDate').value = a.date;
-    document.getElementById('aeRT').value = a.readTime || '';
-    document.getElementById('aeExc').value = a.excerpt || '';
-    document.getElementById('aeBody').value = a.content;
-    document.getElementById('articleEditor').classList.add('show');
-}
-
-function addArticle() {
-    editIdx = -1; editSec = 'articles';
-    document.getElementById('aeTitle').textContent = '添加文章';
-    document.getElementById('aeTi').value = '';
-    document.getElementById('aeTag').value = '';
-    document.getElementById('aeDate').value = new Date().toISOString().slice(0,10);
-    document.getElementById('aeRT').value = '';
-    document.getElementById('aeExc').value = '';
-    document.getElementById('aeBody').value = '';
-    document.getElementById('articleEditor').classList.add('show');
-}
-
-function saveArticle() {
-    const item = {
-        title: document.getElementById('aeTi').value,
-        tag: document.getElementById('aeTag').value,
-        date: document.getElementById('aeDate').value,
-        readTime: document.getElementById('aeRT').value,
-        excerpt: document.getElementById('aeExc').value,
-        content: document.getElementById('aeBody').value
-    };
-    if (!item.title) { alert('标题不能为空'); return; }
-    if (editIdx >= 0) DATA[lang].articles.items[editIdx] = item;
-    else DATA[lang].articles.items.push(item);
-    saveLocal(); closeArtEdit(); render();
-}
-
-function deleteArticle(i) {
-    if (!confirm('确定删除？')) return;
-    DATA[lang].articles.items.splice(i, 1); saveLocal(); render();
-}
-
-function closeArtEdit() { document.getElementById('articleEditor').classList.remove('show'); }
-
-// ---- Generic Item Editor (yin/xing/projects) ----
-function addItem(sec) { editIdx = -1; editSec = sec; openItemForm(sec, {}); }
-function editItem(sec, i) { editIdx = i; editSec = sec; openItemForm(sec, DATA[lang][sec].items[i]); }
-
-function openItemForm(sec, item) {
-    const titles = { yin: '添加照片', xing: '添加影像', projects: '添加项目' };
-    document.getElementById('ieTitle').textContent = editIdx >= 0 ? '编辑' : (titles[sec] || '添加');
-    const imgId = 'ieImg';
-    if (sec === 'yin') {
-        document.getElementById('ieFields').innerHTML = `
-            <div class="fg">
-                <label>图片</label>
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                    <span class="file-upload" onclick="triggerUpload('yin','img')">📁 选择文件</span>
-                    <span class="file-name" id="uploadFileName">${item.img ? '✓ 已选择' : '支持粘贴截图 Ctrl+V'}</span>
-                </div>
-                <input type="hidden" id="${imgId}" value="${escHtml(item.img||'')}">
-                ${item.img ? `<img src="${escHtml(item.img)}" style="max-width:200px;max-height:150px;border-radius:8px;margin-top:8px;border:1px solid var(--light)">` : ''}
-            </div>
-            <div class="fg"><label>描述</label><input id="ieCap" value="${escHtml(item.caption||'')}"></div>`;
-    } else if (sec === 'xing') {
-        document.getElementById('ieFields').innerHTML = `
-            <div class="fg">
-                <label>图片</label>
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                    <span class="file-upload" onclick="triggerUpload('xing','img')">📁 选择文件</span>
-                    <span class="file-name" id="uploadFileName">${item.img ? '✓ 已选择' : '支持粘贴截图 Ctrl+V'}</span>
-                </div>
-                <input type="hidden" id="${imgId}" value="${escHtml(item.img||'')}">
-                ${item.img ? `<img src="${escHtml(item.img)}" style="max-width:200px;max-height:150px;border-radius:8px;margin-top:8px;border:1px solid var(--light)">` : ''}
-            </div>
-            <div class="fg"><label>地点</label><input id="iePlace" value="${escHtml(item.place||'')}"></div>
-            <div class="fg"><label>描述</label><input id="ieCap" value="${escHtml(item.caption||'')}"></div>`;
-    } else if (sec === 'projects') {
-        document.getElementById('ieFields').innerHTML = `
-            <div class="fg">
-                <label>图标</label>
-                <div style="display:flex;align-items:center;gap:10px">
-                    <span class="file-upload" onclick="triggerUpload('projects','icon')">📁 选择图标</span>
-                    <span class="file-name" id="uploadFileName">${item.icon && item.icon.startsWith('data:') ? '✓ 已选择' : '或输入 emoji'}</span>
-                </div>
-                <input type="hidden" id="ieIcon" value="${escHtml(item.icon||'')}" placeholder="如 🌐 或上传图片">
-                ${item.icon && item.icon.startsWith('data:') ? `<img src="${escHtml(item.icon)}" style="width:48px;height:48px;border-radius:8px;margin-top:8px;border:1px solid var(--light);object-fit:cover">` : ''}
-            </div>
-            <div class="fg"><label>标题</label><input id="ieTi2" value="${escHtml(item.title||'')}"></div>
-            <div class="fg"><label>描述</label><textarea id="ieDesc" style="min-height:80px">${escHtml(item.desc||'')}</textarea></div>
-            <div class="fg"><label>标签（逗号分隔）</label><input id="ieTags" value="${(item.tags||[]).join(', ')}"></div>
-            <div class="fg"><label>链接</label><input id="ieLink" value="${escHtml(item.link||'')}"></div>`;
-    }
-    document.getElementById('itemEditor').classList.add('show');
-}
-
-function saveItem() {
-    const obj = {};
-    const get = id => document.getElementById(id)?.value || '';
-    if (editSec === 'yin') {
-        obj.img = get('ieImg'); obj.caption = get('ieCap');
-    } else if (editSec === 'xing') {
-        obj.img = get('ieImg'); obj.place = get('iePlace'); obj.caption = get('ieCap');
-    } else if (editSec === 'projects') {
-        obj.icon = get('ieIcon'); obj.title = get('ieTi2'); obj.desc = get('ieDesc');
-        obj.tags = get('ieTags').split(',').map(t=>t.trim()).filter(Boolean);
-        obj.link = get('ieLink');
-    }
-    if (!obj.title && !obj.img) { alert('请填写必要信息'); return; }
-    if (editIdx >= 0) DATA[lang][editSec].items[editIdx] = obj;
-    else DATA[lang][editSec].items.push(obj);
-    saveLocal(); closeItemEdit(); render();
-}
-
-function deleteItem(sec, i) {
-    if (!confirm('确定删除？')) return;
-    DATA[lang][sec].items.splice(i, 1); saveLocal(); render();
-}
-
-function closeItemEdit() { document.getElementById('itemEditor').classList.remove('show'); }
-
-// Save / Export
-function saveLocal() { localStorage.setItem('starfield_data', JSON.stringify(DATA)); }
-
-function exportContent() {
-    const blob = new Blob([JSON.stringify(DATA, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'content.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-    alert('content.json 已导出！请将其替换项目中的 content.json 文件。');
-}
-
-function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-// Load localStorage overrides
-function loadLocalData() {
-    const s = localStorage.getItem('starfield_data');
-    if (!s) return;
-    try {
-        const local = JSON.parse(s);
-        for (const l of Object.keys(local)) {
-            if (l === 'admin_password') continue;
-            if (!DATA[l]) continue;
-            for (const sec of Object.keys(local[l])) {
-                if (Array.isArray(local[l][sec])) {
-                    DATA[l][sec] = local[l][sec];
-                } else if (typeof local[l][sec] === 'object' && 'items' in local[l][sec]) {
-                    DATA[l][sec] = local[l][sec];
-                }
-            }
-        }
-    } catch(e) { console.warn('localStorage error', e); }
-}
-
-// Add admin buttons to rendered sections
-function addAdminBtns() {
-    document.querySelectorAll('.admin-item-bar, .add-btn-sec').forEach(e => e.remove());
-    if (!isAdmin) return;
-
-    document.querySelectorAll('#artGrid .article-card').forEach((el, i) => {
-        const bar = document.createElement('div');
-        bar.className = 'admin-item-bar editable';
-        bar.innerHTML = `<button class="edit-btn" onclick="event.stopPropagation();editArticle(${i})">✎</button><button class="del-btn" onclick="event.stopPropagation();deleteArticle(${i})">✕</button>`;
-        el.appendChild(bar);
-    });
-    addSecBtn('artGrid', "addArticle()", '+ 添加文章');
-
-    document.querySelectorAll('#yinGrid .yin-item').forEach((el, i) => {
-        const bar = document.createElement('div');
-        bar.className = 'admin-item-bar editable';
-        bar.innerHTML = `<button class="edit-btn" onclick="event.stopPropagation();editItem('yin',${i})">✎</button><button class="del-btn" onclick="event.stopPropagation();deleteItem('yin',${i})">✕</button>`;
-        el.appendChild(bar);
-    });
-    addSecBtn('yinGrid', "addItem('yin')", '+ 添加照片');
-
-    document.querySelectorAll('#xingGrid .xing-item').forEach((el, i) => {
-        const bar = document.createElement('div');
-        bar.className = 'admin-item-bar editable';
-        bar.innerHTML = `<button class="edit-btn" onclick="event.stopPropagation();editItem('xing',${i})">✎</button><button class="del-btn" onclick="event.stopPropagation();deleteItem('xing',${i})">✕</button>`;
-        el.appendChild(bar);
-    });
-    addSecBtn('xingGrid', "addItem('xing')", '+ 添加影像');
-
-    document.querySelectorAll('#projList .project-item').forEach((el, i) => {
-        const bar = document.createElement('div');
-        bar.className = 'admin-item-bar editable';
-        bar.innerHTML = `<button class="edit-btn" onclick="event.stopPropagation();editItem('projects',${i})">✎</button><button class="del-btn" onclick="event.stopPropagation();deleteItem('projects',${i})">✕</button>`;
-        el.style.position = 'relative';
-        el.appendChild(bar);
-    });
-    addSecBtn('projList', "addItem('projects')", '+ 添加项目');
-}
-
-function addSecBtn(gridId, fn, label) {
-    const grid = document.getElementById(gridId);
-    if (!grid) return;
-    const existing = grid.parentNode.querySelector('.add-btn-sec');
-    if (existing) existing.remove();
-    const btn = document.createElement('button');
-    btn.className = 'add-btn add-btn-sec';
-    btn.textContent = label;
-    btn.onclick = () => eval(fn);
-    grid.parentNode.insertBefore(btn, grid.nextSibling);
-}
-
-// Patch render() to include admin buttons
-const origRender = render;
-render = function() {
-    origRender();
-    addAdminBtns();
-};
 </script>
 </body>
 </html>
