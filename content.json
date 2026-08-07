@@ -2,9 +2,13 @@
   "zh-CN": {
     "site_name": "空间",
     "hero": {
-      "badge": "欢迎来到我的世界",
-      "title_1": "记录", "title_hl": "生活", "title_2": "与",
-      "title_3": "探索", "title_hl2": "技术", "title_4": "的旅程",
+      "badge": "欢迎来到我的博客",
+      "title_1": "记录",
+      "title_hl": "生活",
+      "title_2": "与",
+      "title_3": "探索",
+      "title_hl2": "技术",
+      "title_4": "的旅程",
       "subtitle": "这里是我在互联网上的一方小天地，记录着思考、创作与成长的点滴。",
       "cta": "了解更多"
     },
@@ -45,9 +49,13 @@
   "zh-TW": {
     "site_name": "空間",
     "hero": {
-      "badge": "歡迎來到我的世界",
-      "title_1": "記錄", "title_hl": "生活", "title_2": "與",
-      "title_3": "探索", "title_hl2": "技術", "title_4": "的旅程",
+      "badge": "歡迎來到我的部落格",
+      "title_1": "記錄",
+      "title_hl": "生活",
+      "title_2": "與",
+      "title_3": "探索",
+      "title_hl2": "技術",
+      "title_4": "的旅程",
       "subtitle": "這裡是我在互聯網上的一方小天地，記錄著思考、創作與成長的點滴。",
       "cta": "瞭解更多"
     },
@@ -88,9 +96,13 @@
   "en": {
     "site_name": "Space",
     "hero": {
-      "badge": "Welcome to My World",
-      "title_1": "Documenting ", "title_hl": "Life", "title_2": " & ",
-      "title_3": "Exploring ", "title_hl2": "Tech", "title_4": "",
+      "badge": "Welcome to My Blog",
+      "title_1": "Documenting ",
+      "title_hl": "Life",
+      "title_2": " & ",
+      "title_3": "Exploring ",
+      "title_hl2": "Tech",
+      "title_4": "",
       "subtitle": "A small corner of the internet where I record thoughts, creations, and growth.",
       "cta": "Learn More"
     },
