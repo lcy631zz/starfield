@@ -6,7 +6,7 @@
     <title>我的空间</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         /* ============================================
            CSS Variables & Reset
@@ -40,8 +40,8 @@
             --radius-lg: 20px;
             --radius-xl: 28px;
 
-            --font-serif: 'Noto Serif SC', 'STSong', serif;
-            --font-sans: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+            --font-serif: 'Noto Serif SC', 'Noto Sans TC', 'STSong', serif;
+            --font-sans: 'Noto Sans SC', 'Noto Sans TC', 'Microsoft YaHei', sans-serif;
 
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -63,6 +63,42 @@
             background: var(--bg-white);
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============================================
+           Language Switcher
+           ============================================ */
+        .lang-switcher {
+            display: flex;
+            gap: 2px;
+            background: var(--bg-light);
+            border-radius: 100px;
+            padding: 3px;
+        }
+
+        .lang-btn {
+            padding: 5px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            font-size: 0.78rem;
+            font-weight: 500;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: var(--font-sans);
+            white-space: nowrap;
+        }
+
+        .lang-btn:hover {
+            color: var(--text-secondary);
+        }
+
+        .lang-btn.active {
+            background: var(--bg-white);
+            color: var(--red-primary);
+            box-shadow: var(--shadow-sm);
+            font-weight: 600;
         }
 
         /* ============================================
@@ -93,6 +129,12 @@
             align-items: center;
             justify-content: space-between;
             height: 64px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
         }
 
         .logo {
@@ -133,7 +175,6 @@
             padding: 8px 18px;
             border-radius: 100px;
             transition: var(--transition);
-            position: relative;
         }
 
         .nav-links a:hover {
@@ -770,12 +811,21 @@
         @media (max-width: 768px) {
             .navbar-inner {
                 padding: 0 16px;
-                height: 56px;
+                height: auto;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
+
+            .nav-left {
+                flex-wrap: wrap;
+                gap: 8px;
             }
 
             .nav-links a {
-                padding: 6px 12px;
-                font-size: 0.82rem;
+                padding: 5px 10px;
+                font-size: 0.78rem;
             }
 
             .logo {
@@ -786,6 +836,11 @@
                 width: 28px;
                 height: 28px;
                 font-size: 0.85rem;
+            }
+
+            .lang-btn {
+                padding: 4px 8px;
+                font-size: 0.72rem;
             }
 
             .section {
@@ -842,15 +897,22 @@
     <!-- ==================== Navigation ==================== -->
     <nav class="navbar" id="navbar">
         <div class="navbar-inner">
-            <a href="#" class="logo">
-                <span class="logo-icon">✿</span>
-                空间
-            </a>
+            <div class="nav-left">
+                <a href="#" class="logo">
+                    <span class="logo-icon">✿</span>
+                    <span data-i18n="site_name">空间</span>
+                </a>
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn active" data-lang="zh-CN" onclick="switchLang('zh-CN')">简中</button>
+                    <button class="lang-btn" data-lang="zh-TW" onclick="switchLang('zh-TW')">繁體</button>
+                    <button class="lang-btn" data-lang="en" onclick="switchLang('en')">EN</button>
+                </div>
+            </div>
             <ul class="nav-links">
-                <li><a href="#wo" class="active">我</a></li>
-                <li><a href="#wen">文</a></li>
-                <li><a href="#yin">荫</a></li>
-                <li><a href="#xiangmu">项目</a></li>
+                <li><a href="#wo" class="active" data-i18n="nav_wo">我</a></li>
+                <li><a href="#wen" data-i18n="nav_wen">文</a></li>
+                <li><a href="#yin" data-i18n="nav_yin">蔭</a></li>
+                <li><a href="#xiangmu" data-i18n="nav_xiangmu">項目</a></li>
             </ul>
         </div>
     </nav>
@@ -859,20 +921,18 @@
     <section class="hero" id="hero">
         <canvas class="hero-canvas" id="starCanvas"></canvas>
         <div class="hero-content">
-            <div class="hero-badge">欢迎来到我的世界</div>
+            <div class="hero-badge" data-i18n="hero_badge">歡迎來到我的世界</div>
             <h1 class="hero-title">
-                记录<span class="highlight">生活</span>与<br>探索<span class="highlight">技术</span>的旅程
+                <span data-i18n="hero_title_1">記錄</span><span class="highlight" data-i18n="hero_title_highlight">生活</span><span data-i18n="hero_title_2">與</span><br><span data-i18n="hero_title_3">探索</span><span class="highlight" data-i18n="hero_title_highlight2">技術</span><span data-i18n="hero_title_4">的旅程</span>
             </h1>
-            <p class="hero-subtitle">
-                这里是我在互联网上的一方小天地，记录着思考、创作与成长的点滴。
-            </p>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">這裡是我在互聯網上的一方小天地的思考、創作與成長的點滴。</p>
             <a href="#wo" class="hero-cta">
-                了解更多
+                <span data-i18n="hero_cta">瞭解更多</span>
                 <span>↓</span>
             </a>
         </div>
         <div class="scroll-hint">
-            <span>向下滚动</span>
+            <span data-i18n="scroll_hint">向下滾動</span>
             <div class="arrow"></div>
         </div>
     </section>
@@ -881,17 +941,17 @@
     <section class="section" id="wo">
         <div class="section-inner">
             <div class="section-divider" style="background: var(--red-primary);"></div>
-            <span class="section-label" style="color: var(--red-primary);">About Me</span>
-            <h2 class="section-title">关于我</h2>
-            <p class="section-desc">一位热爱技术与设计的创作者，在代码与文字之间寻找平衡。</p>
+            <span class="section-label" style="color: var(--red-primary);" data-i18n="about_label">About Me</span>
+            <h2 class="section-title" data-i18n="about_title">關於我</h2>
+            <p class="section-desc" data-i18n="about_desc">一位熱愛技術與設計的創作者，在代碼與文字之間尋找平衡。</p>
 
             <div class="about-grid">
                 <div class="about-card">
                     <div class="avatar">
                         <div class="avatar-placeholder">👤</div>
                     </div>
-                    <h3 class="about-name">Your Name</h3>
-                    <p class="about-role">开发者 / 写作者 / 终身学习者</p>
+                    <h3 class="about-name" data-i18n="about_name">無</h3>
+                    <p class="about-role" data-i18n="about_role">無</p>
                     <div class="about-links">
                         <a href="#" title="GitHub">⚡</a>
                         <a href="#" title="Twitter">𝕏</a>
@@ -904,41 +964,27 @@
                     <div class="about-block">
                         <h3>
                             <span class="icon">💬</span>
-                            自我介绍
+                            <span data-i18n="about_intro_title">自我介紹</span>
                         </h3>
-                        <p>
-                            你好！我是一名热爱技术与创造的开发者。我喜欢探索新的技术领域，
-                            也享受用文字记录思考和感悟的过程。相信持续学习和分享能够带来成长，
-                            希望这里的内容能给你带来一些启发和帮助。
-                        </p>
+                        <p data-i18n="about_intro_text">無</p>
                     </div>
 
                     <div class="about-block">
                         <h3>
                             <span class="icon">🛠️</span>
-                            技能与工具
+                            <span data-i18n="about_skills_title">技能與工具</span>
                         </h3>
-                        <div class="skill-tags">
-                            <span class="skill-tag">HTML / CSS</span>
-                            <span class="skill-tag">JavaScript</span>
-                            <span class="skill-tag">Hugo</span>
-                            <span class="skill-tag">Python</span>
-                            <span class="skill-tag">Git</span>
-                            <span class="skill-tag">Docker</span>
-                            <span class="skill-tag">Linux</span>
-                            <span class="skill-tag">UI Design</span>
+                        <div class="skill-tags" id="skillTags">
+                            <!-- filled by JS -->
                         </div>
                     </div>
 
                     <div class="about-block">
                         <h3>
                             <span class="icon">📍</span>
-                            基本信息
+                            <span data-i18n="about_info_title">基本資訊</span>
                         </h3>
-                        <p>
-                            📍 中国 &nbsp;·&nbsp; 🎓 计算机科学 &nbsp;·&nbsp;
-                            💼 软件开发 &nbsp;·&nbsp; 🎯 专注于 Web 技术与开源
-                        </p>
+                        <p data-i18n="about_info_text">無</p>
                     </div>
                 </div>
             </div>
@@ -949,388 +995,443 @@
     <section class="section" id="wen">
         <div class="section-inner">
             <div class="section-divider" style="background: var(--red-primary);"></div>
-            <span class="section-label" style="color: var(--red-primary);">Articles</span>
-            <h2 class="section-title">文章</h2>
-            <p class="section-desc">记录技术探索、学习心得与生活中的思考。</p>
+            <span class="section-label" style="color: var(--red-primary);" data-i18n="articles_label">Articles</span>
+            <h2 class="section-title" data-i18n="articles_title">文章</h2>
+            <p class="section-desc" data-i18n="articles_desc">記錄技術探索、學習心得與生活中的思考。</p>
 
-            <div class="article-grid">
-                <a href="#" class="article-card fade-in">
-                    <div class="card-meta">
-                        <span class="card-tag">技术</span>
-                        <span>2026-08-05</span>
-                    </div>
-                    <h3>Hugo 静态网站搭建完全指南</h3>
-                    <p>从零开始使用 Hugo + Congo 主题搭建个人网站，包含部署到 GitHub Pages 的完整步骤和常见问题解决。</p>
-                    <div class="card-footer">
-                        <span>阅读时间 8 分钟</span>
-                        <span>阅读更多 →</span>
-                    </div>
-                </a>
-
-                <a href="#" class="article-card fade-in">
-                    <div class="card-meta">
-                        <span class="card-tag">随笔</span>
-                        <span>2026-07-28</span>
-                    </div>
-                    <h3>在代码与文字之间</h3>
-                    <p>作为一名开发者，如何平衡技术深耕与人文思考？这是我的一些心得与体会。</p>
-                    <div class="card-footer">
-                        <span>阅读时间 5 分钟</span>
-                        <span>阅读更多 →</span>
-                    </div>
-                </a>
-
-                <a href="#" class="article-card fade-in">
-                    <div class="card-meta">
-                        <span class="card-tag">工具</span>
-                        <span>2026-07-15</span>
-                    </div>
-                    <h3>提升项目安全性的 Git 实践</h3>
-                    <p>如何利用 Dependabot、分支保护、Pre-commit Hooks 等工具构建多层次的代码安全防线。</p>
-                    <div class="card-footer">
-                        <span>阅读时间 6 分钟</span>
-                        <span>阅读更多 →</span>
-                    </div>
-                </a>
-
-                <a href="#" class="article-card fade-in">
-                    <div class="card-meta">
-                        <span class="card-tag">设计</span>
-                        <span>2026-06-30</span>
-                    </div>
-                    <h3>极简主义 UI 设计原则</h3>
-                    <p>少即是多——探讨如何用最简单的元素创造出优雅且实用的用户界面。</p>
-                    <div class="card-footer">
-                        <span>阅读时间 4 分钟</span>
-                        <span>阅读更多 →</span>
-                    </div>
-                </a>
-
-                <a href="#" class="article-card fade-in">
-                    <div class="card-meta">
-                        <span class="card-tag">技术</span>
-                        <span>2026-06-12</span>
-                    </div>
-                    <h3>Canvas 粒子动画入门</h3>
-                    <p>使用 HTML5 Canvas 创建星空粒子效果，涵盖粒子系统、鼠标交互和性能优化。</p>
-                    <div class="card-footer">
-                        <span>阅读时间 10 分钟</span>
-                        <span>阅读更多 →</span>
-                    </div>
-                </a>
-
-                <a href="#" class="article-card fade-in">
-                    <div class="card-meta">
-                        <span class="card-tag">生活</span>
-                        <span>2026-05-20</span>
-                    </div>
-                    <h3>程序员的日常与思考</h3>
-                    <p>日常开发中的一些感悟，关于效率、习惯和如何在快节奏中保持内心的平静。</p>
-                    <div class="card-footer">
-                        <span>阅读时间 3 分钟</span>
-                        <span>阅读更多 →</span>
-                    </div>
-                </a>
+            <div class="article-grid" id="articleGrid">
+                <!-- filled by JS -->
             </div>
         </div>
     </section>
 
-    <!-- ==================== 荫 Section (Green Theme) ==================== -->
+    <!-- ==================== 蔭 Section ==================== -->
     <section class="section" id="yin">
         <div class="section-inner">
             <div class="section-divider"></div>
-            <span class="section-label">Sanctuary</span>
-            <h2 class="section-title">树荫</h2>
-            <p class="section-desc">一方宁静的角落，种下思绪，收获平和。</p>
+            <span class="section-label" data-i18n="yin_label">Sanctuary</span>
+            <h2 class="section-title" data-i18n="yin_title">樹蔭</h2>
+            <p class="section-desc" data-i18n="yin_desc">一方寧靜的角落，種下思緒，收獲平和。</p>
 
-            <div class="yin-grid">
-                <div class="yin-card fade-in">
-                    <div class="yin-icon">🌱</div>
-                    <h3>阅读清单</h3>
-                    <p>记录正在读的书、读过的好书，以及每一本带来的思考与改变。</p>
-                </div>
-
-                <div class="yin-card fade-in">
-                    <div class="yin-icon">🎵</div>
-                    <h3>音乐角落</h3>
-                    <p>分享让我沉浸其中的音乐，从古典到爵士，从后摇到 ambient。</p>
-                </div>
-
-                <div class="yin-card fade-in">
-                    <div class="yin-icon">📷</div>
-                    <h3>光影碎片</h3>
-                    <p>用镜头捕捉生活中的美好瞬间，一花一木，一人一景。</p>
-                </div>
-
-                <div class="yin-card fade-in">
-                    <div class="yin-icon">🍵</div>
-                    <h3>慢生活</h3>
-                    <p>关于生活方式的思考——如何在快节奏中找到属于自己的节奏。</p>
-                </div>
-
-                <div class="yin-card fade-in">
-                    <div class="yin-icon">🌿</div>
-                    <h3>自然笔记</h3>
-                    <p>观察四季更迭，记录花草树木，感受自然最纯粹的治愈力。</p>
-                </div>
-
-                <div class="yin-card fade-in">
-                    <div class="yin-icon">💭</div>
-                    <h3>随想录</h3>
-                    <p>不成体系的碎片化思考，灵感、感悟、深夜的胡思乱想。</p>
-                </div>
+            <div class="yin-grid" id="yinGrid">
+                <!-- filled by JS -->
             </div>
 
             <div class="yin-quote">
-                <blockquote>
-                    "庭中有树，其荫如盖。风过时，叶声沙沙，像是大自然最温柔的低语。"
-                </blockquote>
-                <cite>—— 写给每一个需要宁静的你</cite>
+                <blockquote data-i18n="yin_quote">無</blockquote>
+                <cite data-i18n="yin_quote_author">無</cite>
             </div>
         </div>
     </section>
 
-    <!-- ==================== 项目 Section ==================== -->
+    <!-- ==================== 項目 Section ==================== -->
     <section class="section" id="xiangmu">
         <div class="section-inner">
             <div class="section-divider" style="background: var(--red-primary);"></div>
-            <span class="section-label" style="color: var(--red-primary);">Projects</span>
-            <h2 class="section-title">项目</h2>
-            <p class="section-desc">一些我投入时间和热情去做的事情。</p>
+            <span class="section-label" style="color: var(--red-primary);" data-i18n="projects_label">Projects</span>
+            <h2 class="section-title" data-i18n="projects_title">項目</h2>
+            <p class="section-desc" data-i18n="projects_desc">一些我投入時間和熱情去做的事情。</p>
 
-            <div class="project-list">
-                <a href="#" class="project-item fade-in">
-                    <div class="project-icon">🌐</div>
-                    <div class="project-info">
-                        <h3>个人网站</h3>
-                        <p>基于 Hugo + Congo 主题搭建的静态博客，托管于 GitHub Pages，用于分享技术文章和个人随笔。</p>
-                    </div>
-                    <div class="project-tags">
-                        <span class="project-tag">Hugo</span>
-                        <span class="project-tag">GitHub Pages</span>
-                    </div>
-                    <span class="project-arrow">→</span>
-                </a>
-
-                <a href="#" class="project-item fade-in">
-                    <div class="project-icon">✨</div>
-                    <div class="project-info">
-                        <h3>星空粒子画布</h3>
-                        <p>基于 HTML5 Canvas 的交互式星空粒子动画，支持鼠标吸引和点击烟花效果。</p>
-                    </div>
-                    <div class="project-tags">
-                        <span class="project-tag">Canvas</span>
-                        <span class="project-tag">JavaScript</span>
-                    </div>
-                    <span class="project-arrow">→</span>
-                </a>
-
-                <a href="#" class="project-item fade-in">
-                    <div class="project-icon">🔒</div>
-                    <div class="project-info">
-                        <h3>项目安全加固套件</h3>
-                        <p>为 GitHub 项目配置 Dependabot、分支保护、CI 检查和 Pre-commit Hooks 的安全实践方案。</p>
-                    </div>
-                    <div class="project-tags">
-                        <span class="project-tag">GitHub</span>
-                        <span class="project-tag">Security</span>
-                        <span class="project-tag">CI/CD</span>
-                    </div>
-                    <span class="project-arrow">→</span>
-                </a>
+            <div class="project-list" id="projectList">
+                <!-- filled by JS -->
             </div>
         </div>
     </section>
 
     <!-- ==================== Footer ==================== -->
     <footer class="footer">
-        <p>用 <span class="red-dot">❤</span> 与代码构建 · 2026</p>
+        <p><span data-i18n="footer_text">用</span> <span class="red-dot">❤</span> <span data-i18n="footer_text2">與代碼構建</span> · 2026</p>
     </footer>
 
     <!-- ==================== JavaScript ==================== -->
     <script>
-        // ---- Starfield Canvas Background ----
-        (function() {
-            const canvas = document.getElementById('starCanvas');
-            const ctx = canvas.getContext('2d');
-            let particles = [];
-            let fireworks = [];
+    // =============================================
+    // i18n Translations
+    // =============================================
+    const i18n = {
+        "zh-CN": {
+            site_name: "空间",
+            nav_wo: "我", nav_wen: "文", nav_yin: "蔭", nav_xiangmu: "項目",
+            hero_badge: "歡迎來到我的世界",
+            hero_title_1: "記錄", hero_title_highlight: "生活", hero_title_2: "與",
+            hero_title_3: "探索", hero_title_highlight2: "技術", hero_title_4: "的旅程",
+            hero_subtitle: "這裡是我在互聯網上的一方小天地，記錄著思考、創作與成長的點滴。",
+            hero_cta: "瞭解更多",
+            scroll_hint: "向下滾動",
+            about_label: "About Me", about_title: "關於我",
+            about_desc: "一位熱愛技術與設計的創作者，在代碼與文字之間尋找平衡。",
+            about_name: "無", about_role: "無",
+            about_intro_title: "自我介紹", about_intro_text: "無",
+            about_skills_title: "技能與工具",
+            about_info_title: "基本資訊", about_info_text: "無",
+            articles_label: "Articles", articles_title: "文章",
+            articles_desc: "記錄技術探索、學習心得與生活中的思考。",
+            yin_label: "Sanctuary", yin_title: "樹蔭",
+            yin_desc: "一方寧靜的角落，種下思緒，收獲平和。",
+            yin_quote: "庭中有樹，其蔭如蓋。風過時，葉聲沙沙，像是大自然最溫柔的低語。",
+            yin_quote_author: "—— 寫給每一個需要寧靜的你",
+            projects_label: "Projects", projects_title: "項目",
+            projects_desc: "一些我投入時間和熱情去做的事情。",
+            footer_text: "用", footer_text2: "與代碼構建",
+            skill_tags: [],
+            articles: [],
+            yin_items: [],
+            projects: []
+        },
+        "zh-TW": {
+            site_name: "空間",
+            nav_wo: "我", nav_wen: "文", nav_yin: "蔭", nav_xiangmu: "項目",
+            hero_badge: "歡迎來到我的世界",
+            hero_title_1: "記錄", hero_title_highlight: "生活", hero_title_2: "與",
+            hero_title_3: "探索", hero_title_highlight2: "技術", hero_title_4: "的旅程",
+            hero_subtitle: "這裡是我在互聯網上的一方小天地的思考、創作與成長的點滴。",
+            hero_cta: "瞭解更多",
+            scroll_hint: "向下滾動",
+            about_label: "About Me", about_title: "關於我",
+            about_desc: "一位熱愛技術與設計的創作者，在代碼與文字之間尋找平衡。",
+            about_name: "無", about_role: "無",
+            about_intro_title: "自我介紹", about_intro_text: "無",
+            about_skills_title: "技能與工具",
+            about_info_title: "基本資訊", about_info_text: "無",
+            articles_label: "Articles", articles_title: "文章",
+            articles_desc: "記錄技術探索、學習心得與生活中的思考。",
+            yin_label: "Sanctuary", yin_title: "樹蔭",
+            yin_desc: "一方寧靜的角落，種下思緒，收獲平和。",
+            yin_quote: "庭中有樹，其蔭如蓋。風過時，葉聲沙沙，像是大自然最溫柔的低語。",
+            yin_quote_author: "—— 寫給每一個需要寧靜的你",
+            projects_label: "Projects", projects_title: "項目",
+            projects_desc: "一些我投入時間和熱情去做的事情。",
+            footer_text: "用", footer_text2: "與代碼構建",
+            skill_tags: [],
+            articles: [],
+            yin_items: [],
+            projects: []
+        },
+        "en": {
+            site_name: "Space",
+            nav_wo: "Me", nav_wen: "Articles", nav_yin: "Sanctuary", nav_xiangmu: "Projects",
+            hero_badge: "Welcome to My World",
+            hero_title_1: "Documenting ", hero_title_highlight: "Life", hero_title_2: " & ",
+            hero_title_3: "Exploring ", hero_title_highlight2: "Tech", hero_title_4: "",
+            hero_subtitle: "A small corner of the internet where I record my thoughts, creations, and growth.",
+            hero_cta: "Learn More",
+            scroll_hint: "Scroll Down",
+            about_label: "About Me", about_title: "About Me",
+            about_desc: "A creator passionate about technology and design, finding balance between code and words.",
+            about_name: "N/A", about_role: "N/A",
+            about_intro_title: "Introduction", about_intro_text: "N/A",
+            about_skills_title: "Skills & Tools",
+            about_info_title: "Basic Info", about_info_text: "N/A",
+            articles_label: "Articles", articles_title: "Articles",
+            articles_desc: "Recording technical explorations, learning reflections, and life thoughts.",
+            yin_label: "Sanctuary", yin_title: "Green Shade",
+            yin_desc: "A quiet corner to plant thoughts and harvest peace.",
+            yin_quote: "N/A",
+            yin_quote_author: "N/A",
+            projects_label: "Projects", projects_title: "Projects",
+            projects_desc: "Things I spend my time and passion on.",
+            footer_text: "Built with", footer_text2: "& Code",
+            skill_tags: [],
+            articles: [],
+            yin_items: [],
+            projects: []
+        }
+    };
 
-            function resize() {
-                canvas.width = canvas.parentElement.offsetWidth;
-                canvas.height = canvas.parentElement.offsetHeight;
+    // Dynamic content for each section (user can edit these)
+    const dynamicContent = {
+        "zh-CN": {
+            skill_tags: [],
+            articles: [],
+            yin_items: [],
+            projects: []
+        },
+        "zh-TW": {
+            skill_tags: [],
+            articles: [],
+            yin_items: [],
+            projects: []
+        },
+        "en": {
+            skill_tags: [],
+            articles: [],
+            yin_items: [],
+            projects: []
+        }
+    };
+
+    let currentLang = "zh-CN";
+
+    function switchLang(lang) {
+        currentLang = lang;
+        const t = i18n[lang];
+        const d = dynamicContent[lang];
+
+        // Update lang buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.lang === lang);
+        });
+
+        // Update all data-i18n elements
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) {
+                el.textContent = t[key];
             }
-            resize();
-            window.addEventListener('resize', resize);
+        });
 
-            function random(min, max) {
-                return Math.random() * (max - min) + min;
+        // Update skill tags
+        const skillContainer = document.getElementById('skillTags');
+        skillContainer.innerHTML = d.skill_tags.length
+            ? d.skill_tags.map(s => `<span class="skill-tag">${s}</span>`).join('')
+            : '<span style="color:var(--text-tertiary);font-size:0.85rem;">無</span>';
+
+        // Update articles
+        const articleGrid = document.getElementById('articleGrid');
+        if (d.articles.length) {
+            articleGrid.innerHTML = d.articles.map(a => `
+                <a href="${a.link || '#'}" class="article-card fade-in visible">
+                    <div class="card-meta">
+                        <span class="card-tag">${a.tag}</span>
+                        <span>${a.date}</span>
+                    </div>
+                    <h3>${a.title}</h3>
+                    <p>${a.desc}</p>
+                    <div class="card-footer">
+                        <span>${a.readTime}</span>
+                        <span data-i18n="read_more">閱讀更多 →</span>
+                    </div>
+                </a>
+            `).join('');
+        } else {
+            articleGrid.innerHTML = '<p style="color:var(--text-tertiary);grid-column:1/-1;text-align:center;padding:40px;">無</p>';
+        }
+
+        // Update yin items
+        const yinGrid = document.getElementById('yinGrid');
+        if (d.yin_items.length) {
+            yinGrid.innerHTML = d.yin_items.map(y => `
+                <div class="yin-card fade-in visible">
+                    <div class="yin-icon">${y.icon}</div>
+                    <h3>${y.title}</h3>
+                    <p>${y.desc}</p>
+                </div>
+            `).join('');
+        } else {
+            yinGrid.innerHTML = '<p style="color:#6B8F7B;grid-column:1/-1;text-align:center;padding:40px;">無</p>';
+        }
+
+        // Update projects
+        const projectList = document.getElementById('projectList');
+        if (d.projects.length) {
+            projectList.innerHTML = d.projects.map(p => `
+                <a href="${p.link || '#'}" class="project-item fade-in visible">
+                    <div class="project-icon">${p.icon}</div>
+                    <div class="project-info">
+                        <h3>${p.title}</h3>
+                        <p>${p.desc}</p>
+                    </div>
+                    <div class="project-tags">
+                        ${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}
+                    </div>
+                    <span class="project-arrow">→</span>
+                </a>
+            `).join('');
+        } else {
+            projectList.innerHTML = '<p style="color:var(--text-tertiary);text-align:center;padding:40px;">無</p>';
+        }
+
+        // Re-observe fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }
+
+    // =============================================
+    // Starfield Canvas Background
+    // =============================================
+    (function() {
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let fireworks = [];
+
+        function resize() {
+            canvas.width = canvas.parentElement.offsetWidth;
+            canvas.height = canvas.parentElement.offsetHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        function random(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function randomColor() {
+            const colors = [
+                '#64B5F6', '#81D4FA', '#B39DDB',
+                '#CE93D8', '#80DEEA', '#FFF176',
+                '#FFAB91', '#A5D6A7', '#F48FB1'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function dist(x1, y1, x2, y2) {
+            return Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+        }
+
+        class Star {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = random(0, canvas.width);
+                this.y = random(0, canvas.height);
+                this.size = random(0.8, 2.5);
+                this.baseSize = this.size;
+                this.vx = random(-0.3, 0.3);
+                this.vy = random(-0.3, 0.3);
+                this.color = randomColor();
+                this.opacity = random(0.2, 0.8);
+                this.phase = random(0, Math.PI * 2);
+                this.speed = random(0.008, 0.025);
             }
-
-            function randomColor() {
-                const colors = [
-                    '#64B5F6', '#81D4FA', '#B39DDB',
-                    '#CE93D8', '#80DEEA', '#FFF176',
-                    '#FFAB91', '#A5D6A7', '#F48FB1'
-                ];
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-
-            function dist(x1, y1, x2, y2) {
-                return Math.sqrt((x2-x1)**2 + (y2-y1)**2);
-            }
-
-            class Star {
-                constructor() { this.reset(); }
-                reset() {
-                    this.x = random(0, canvas.width);
-                    this.y = random(0, canvas.height);
-                    this.size = random(0.8, 2.5);
-                    this.baseSize = this.size;
-                    this.vx = random(-0.3, 0.3);
-                    this.vy = random(-0.3, 0.3);
-                    this.color = randomColor();
-                    this.opacity = random(0.2, 0.8);
-                    this.phase = random(0, Math.PI * 2);
-                    this.speed = random(0.008, 0.025);
-                }
-                update(mx, my, active) {
-                    this.phase += this.speed;
-                    this.opacity = 0.2 + Math.abs(Math.sin(this.phase)) * 0.6;
-                    if (active) {
-                        const d = dist(this.x, this.y, mx, my);
-                        if (d < 180) {
-                            const f = (180 - d) / 180;
-                            const a = Math.atan2(my - this.y, mx - this.x);
-                            this.vx += Math.cos(a) * f * 0.08;
-                            this.vy += Math.sin(a) * f * 0.08;
-                            this.size = this.baseSize + f * 2;
-                        } else {
-                            this.size = this.baseSize;
-                        }
+            update(mx, my, active) {
+                this.phase += this.speed;
+                this.opacity = 0.2 + Math.abs(Math.sin(this.phase)) * 0.6;
+                if (active) {
+                    const d = dist(this.x, this.y, mx, my);
+                    if (d < 180) {
+                        const f = (180 - d) / 180;
+                        const a = Math.atan2(my - this.y, mx - this.x);
+                        this.vx += Math.cos(a) * f * 0.08;
+                        this.vy += Math.sin(a) * f * 0.08;
+                        this.size = this.baseSize + f * 2;
                     } else {
                         this.size = this.baseSize;
                     }
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    this.vx *= 0.995;
-                    this.vy *= 0.995;
-                    if (this.x < 0) this.x = canvas.width;
-                    if (this.x > canvas.width) this.x = 0;
-                    if (this.y < 0) this.y = canvas.height;
-                    if (this.y > canvas.height) this.y = 0;
+                } else {
+                    this.size = this.baseSize;
                 }
-                draw() {
-                    ctx.save();
-                    ctx.globalAlpha = this.opacity;
-                    ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vx *= 0.995;
+                this.vy *= 0.995;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
             }
-
-            class Particle {
-                constructor(x, y, color) {
-                    this.x = x; this.y = y; this.color = color;
-                    const a = random(0, Math.PI * 2);
-                    const s = random(2, 7);
-                    this.vx = Math.cos(a) * s;
-                    this.vy = Math.sin(a) * s;
-                    this.size = random(1.5, 3.5);
-                    this.opacity = 1;
-                    this.decay = random(0.012, 0.028);
-                }
-                update() {
-                    this.vy += 0.06;
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    this.vx *= 0.98;
-                    this.vy *= 0.98;
-                    this.opacity -= this.decay;
-                    this.size *= 0.97;
-                }
-                draw() {
-                    ctx.save();
-                    ctx.globalAlpha = this.opacity;
-                    ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 12;
-                    ctx.shadowColor = this.color;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-                get isDead() { return this.opacity <= 0; }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
             }
+        }
 
-            function init() {
-                const count = Math.min(160, Math.floor((canvas.width * canvas.height) / 6000));
-                particles = [];
-                for (let i = 0; i < count; i++) particles.push(new Star());
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                const a = random(0, Math.PI * 2);
+                const s = random(2, 7);
+                this.vx = Math.cos(a) * s;
+                this.vy = Math.sin(a) * s;
+                this.size = random(1.5, 3.5);
+                this.opacity = 1;
+                this.decay = random(0.012, 0.028);
             }
-
-            let mouseX = 0, mouseY = 0, mouseActive = false;
-            canvas.addEventListener('mousemove', e => {
-                const rect = canvas.getBoundingClientRect();
-                mouseX = e.clientX - rect.left;
-                mouseY = e.clientY - rect.top;
-                mouseActive = true;
-            });
-            canvas.addEventListener('mouseleave', () => { mouseActive = false; });
-            canvas.addEventListener('click', e => {
-                const rect = canvas.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const c = randomColor();
-                for (let i = 0; i < 40; i++) fireworks.push(new Particle(x, y, c));
-            });
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => { p.update(mouseX, mouseY, mouseActive); p.draw(); });
-                fireworks.forEach((f, i) => { f.update(); f.draw(); if (f.isDead) fireworks.splice(i, 1); });
-                requestAnimationFrame(animate);
+            update() {
+                this.vy += 0.06;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+                this.opacity -= this.decay;
+                this.size *= 0.97;
             }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            get isDead() { return this.opacity <= 0; }
+        }
 
-            init();
-            animate();
-            window.addEventListener('resize', init);
-        })();
+        function init() {
+            const count = Math.min(160, Math.floor((canvas.width * canvas.height) / 6000));
+            particles = [];
+            for (let i = 0; i < count; i++) particles.push(new Star());
+        }
 
-        // ---- Navbar scroll effect ----
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        let mouseX = 0, mouseY = 0, mouseActive = false;
+        canvas.addEventListener('mousemove', e => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+            mouseActive = true;
+        });
+        canvas.addEventListener('mouseleave', () => { mouseActive = false; });
+        canvas.addEventListener('click', e => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const c = randomColor();
+            for (let i = 0; i < 40; i++) fireworks.push(new Particle(x, y, c));
         });
 
-        // ---- Active nav link on scroll ----
-        const sections = document.querySelectorAll('.section, .hero');
-        const navLinks = document.querySelectorAll('.nav-links a');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(s => {
-                const top = s.offsetTop - 100;
-                if (window.scrollY >= top) current = s.id;
-            });
-            navLinks.forEach(a => {
-                a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-            });
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(mouseX, mouseY, mouseActive); p.draw(); });
+            fireworks.forEach((f, i) => { f.update(); f.draw(); if (f.isDead) fireworks.splice(i, 1); });
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+        window.addEventListener('resize', init);
+    })();
+
+    // ---- Navbar scroll effect ----
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ---- Active nav link on scroll ----
+    const sections = document.querySelectorAll('.section, .hero');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(s => {
+            const top = s.offsetTop - 100;
+            if (window.scrollY >= top) current = s.id;
         });
+        navLinks.forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+        });
+    });
 
-        // ---- Fade-in animation on scroll ----
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.15 });
+    // ---- Fade-in animation on scroll ----
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15 });
 
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Initialize with Chinese
+    switchLang('zh-CN');
     </script>
 
 </body>
