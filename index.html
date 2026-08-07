@@ -56,6 +56,9 @@
         .section-inner{max-width:1100px;margin:0 auto}
         .section-title{font-family:var(--serif);font-size:clamp(2rem,4vw,2.8rem);font-weight:700;margin-bottom:16px;line-height:1.3}
         .section-desc{color:var(--text2);font-size:1.05rem;max-width:600px;margin-bottom:48px;font-weight:300}
+        .title-with-icon{display:flex;align-items:center;gap:12px}
+        .title-icon{font-size:1.8rem;line-height:1}
+        .divider{width:48px;height:3px;border-radius:3px;margin-bottom:20px}
         .section-red .divider{background:var(--red)}.section-red .section-title{color:var(--red)}
         .section-green .divider{background:linear-gradient(90deg,var(--green),var(--green-mint))}.section-green .section-title{color:#2D5A42}.section-green .section-desc{color:#5A7D6A}
         .section-orange .divider{background:linear-gradient(90deg,var(--orange),var(--orange-accent))}.section-orange .section-title{color:#8B4A06}.section-orange .section-desc{color:#7A5C3E}
@@ -210,7 +213,7 @@
 <section class="section section-red" id="wo">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title">我</h2>
+        <h2 class="section-title"><span class="title-icon">👤</span>我</h2>
         <div class="about-grid">
             <div class="about-card">
                 <div class="avatar" id="avatarBox"><span style="font-size:4.5rem">👤</span></div>
@@ -232,7 +235,7 @@
 <section class="section section-red" id="wen">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title">文</h2>
+        <h2 class="section-title"><span class="title-icon">📝</span>文</h2>
         <p class="section-desc" id="wDesc"></p>
         <div class="article-grid" id="artGrid"></div>
     </div>
@@ -241,7 +244,7 @@
 <section class="section section-green" id="yin">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title">荫</h2>
+        <h2 class="section-title"><span class="title-icon">🌳</span>荫</h2>
         <p class="section-desc" id="yDesc"></p>
         <div class="yin-grid" id="yinGrid"></div>
         <div class="yin-quote"><blockquote id="yQuote">无</blockquote><cite id="yQuoteA">无</cite></div>
@@ -251,7 +254,7 @@
 <section class="section section-red" id="xiangmu">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title">项目</h2>
+        <h2 class="section-title"><span class="title-icon">🛠️</span>项目</h2>
         <p class="section-desc" id="pDesc"></p>
         <div class="project-list" id="projList"></div>
     </div>
@@ -260,7 +263,7 @@
 <section class="section section-orange" id="xing">
     <div class="section-inner">
         <div class="divider"></div>
-        <h2 class="section-title">行</h2>
+        <h2 class="section-title"><span class="title-icon">🐴</span>行</h2>
         <p class="section-desc" id="xDesc"></p>
         <div class="xing-grid" id="xingGrid"></div>
     </div>
