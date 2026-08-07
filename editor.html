@@ -160,7 +160,7 @@ body{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;backg
     <h3>把 content.json 拖到这里</h3>
     <p>或者点击下方按钮选择文件。如果 content.json 和本文件在同一文件夹，编辑器会自动加载。</p>
     <button class="btn" onclick="openFile()">选择 content.json 文件</button>
-    <input type="file" id="fileInput" accept=".json" onchange="handleFile(event)">
+    <input type="file" id="fileInput" accept=".json" onchange="readFileFromInput(event)">
 </div>
 
 <!-- Main app -->
@@ -198,7 +198,7 @@ function init(){
     });
 
     // Try auto-load content.json from same directory
-    fetch('content.json?'+Date.now()).then(r=>{if(r.ok)return r.text()}).then(t=>{
+    fetch('content.json?'+Date.now(),{cache:'no-store'}).then(r=>{if(r.ok)return r.text()}).then(t=>{
         if(t){try{loadData(JSON.parse(t));document.getElementById('dropZone').classList.add('hidden');document.getElementById('app').classList.add('show')}catch(e){}}}
     }).catch(()=>{});
 
@@ -223,7 +223,7 @@ function init(){
 }
 
 function openFile(){document.getElementById('fileInput').click()}
-function handleFile(e){const f=e.target.files[0];if(f)readFile(f)}
+function readFileFromInput(e){const f=e.target.files[0];if(f)readFile(f)}
 
 function readFile(file){
     const r=new FileReader();
@@ -243,6 +243,8 @@ function loadData(d){
         ['hero','about','articles','yin','xing','projects','footer'].forEach(k=>{if(!DATA[l][k])DATA[l][k]=k==='footer'?'':JSON.parse(JSON.stringify(DATA[curLang][k]||{}))});
     });
     renderSidebar();renderPanel();renderStats();dirty=false;
+    // Update blog preview if open
+    if(typeof render==='function')render();
 }
 
 function renderStats(){
@@ -281,7 +283,7 @@ function renderPanel(){
     h+='</div>';
     p.innerHTML=h;
     // Attach event listeners
-    setTimeout(attachListeners,50);
+    setTimeout(()=>{},50);
 }
 
 function renderSection(key){

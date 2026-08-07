@@ -316,7 +316,7 @@ let DATA=null, lang='zh-CN';
 
 async function loadContent(){
     try{
-        const r=await fetch('content.json?'+Date.now());
+        const r=await fetch('content.json?'+Date.now(),{cache:'no-store'});
         DATA=await r.json();
     }catch(e){
         console.error('Failed to load content.json',e);
